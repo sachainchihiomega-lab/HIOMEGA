@@ -1,0 +1,6 @@
+{
+  "name": "HI-OMEGA - Solusi Alami Sacha Inchi Superfood & Platform Affiliate",
+  "description": "Website resmi HI-OMEGA kapsul Sacha Inchi & VCO. Solusi kesehatan kolesterol, sendi, hipertensi, diabetes, jantung, dan sistem kemitraan affiliate.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
