@@ -30,13 +30,14 @@ export const Footer: React.FC<FooterProps> = ({
               <Logo size="md" customLogoUrl={settings.images.logoUrl} />
             </div>
 
-            <p className="text-sm text-slate-400 leading-relaxed">
-              HI-OMEGA Sacha Inchi + VCO Capsules adalah superfood nabati alami yang kaya akan Omega 3, 6, 9 dan Virgin Coconut Oil. Membantu menjaga kestabilan kolesterol, asam urat, gula darah, dan tekanan darah di usia emas 40 tahun ke atas.
+            <p className="text-sm text-slate-300 leading-relaxed font-medium">
+              <strong className="text-white block font-bold mb-1">HI-OMEGA SACHA INCHI OIL + PROBIOTIK VCO</strong>
+              Kombinasi keajaiban alam sumber nabati terbaik di dunia: Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial disetiap kapsul. Setiap 1 botol tepat berisi 60 kapsul herbal @500mg berizin resmi BPOM RI & Halal MUI.
             </p>
 
             <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-bold text-slate-400">
-              <span className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl">
-                🛡️ BPOM RI Terdaftar
+              <span className="bg-slate-900 border border-slate-800 text-emerald-300 font-extrabold px-3 py-1.5 rounded-xl">
+                🛡️ BPOM: POM TR253094921
               </span>
               <span className="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl">
                 ✅ Sertifikasi Halal
@@ -45,7 +46,7 @@ export const Footer: React.FC<FooterProps> = ({
                 🌿 100% Herbal Asli
               </span>
               <span className="bg-emerald-950/70 border border-emerald-800 text-emerald-300 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-                <Truck className="w-3.5 h-3.5" /> Kirim Cepat Seluruh Indonesia (COD)
+                <Truck className="w-3.5 h-3.5" /> Kirim Cepat Seluruh Indonesia
               </span>
             </div>
           </div>
@@ -94,6 +95,11 @@ export const Footer: React.FC<FooterProps> = ({
                 </a>
               </li>
               <li>
+                <a href="#faq" className="hover:text-emerald-400 transition">
+                  • Tanya Jawab & FAQ
+                </a>
+              </li>
+              <li>
                 <button onClick={scrollToTop} className="hover:text-emerald-400 transition flex items-center gap-1">
                   • Kembali ke Atas <ArrowUp className="w-3.5 h-3.5" />
                 </button>
@@ -117,7 +123,7 @@ export const Footer: React.FC<FooterProps> = ({
               className="inline-flex items-center gap-2 bg-emerald-700 hover:bg-emerald-600 text-white font-black px-5 py-3 rounded-2xl text-sm transition shadow-lg border border-emerald-500 cursor-pointer"
             >
               <ShoppingBag className="w-4 h-4 text-emerald-200" />
-              <span>Pesan HI-OMEGA di Website (COD)</span>
+              <span>PESAN SEKARANG</span>
             </button>
 
             <div className="pt-3">
@@ -132,13 +138,8 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
         </div>
 
-        {/* Disclaimer as required on all health flyers */}
+        {/* Footer Copyright */}
         <div className="pt-6 text-center space-y-2">
-          <p className="text-xs text-slate-400 max-w-4xl mx-auto leading-relaxed">
-            <em>
-              <strong>Disclaimer Medis:</strong> Suplemen HI-OMEGA adalah bagian dari gaya hidup sehat dan asupan nutrisi nabati seimbang. Konsultasikan dengan dokter Anda untuk penggunaan bersamaan dengan resep obat medis lain. Tetap aktif berolahraga ringan, jaga pola makan rendah lemak jenuh, dan pantau kesehatan Anda secara berkala.
-            </em>
-          </p>
           <p className="text-xs text-slate-400">
             © {new Date().getFullYear()} HI-OMEGA Indonesia. Hak Cipta Dilindungi Undang-Undang. Produk Asli Bersegel Resmi BPOM RI.
           </p>

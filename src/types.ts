@@ -10,6 +10,13 @@ export type SymptomCategory =
   | 'stroke_otak'
   | 'paru_respirasi'
   | 'ibu_anak'
+  | 'pengentalan_darah'
+  | 'otak_anak'
+  | 'anxiety_depresi'
+  | 'autoimun'
+  | 'kanker'
+  | 'degeneratif'
+  | 'kulit_penuaan'
   | 'semua';
 
 export type ColorTheme = 'emerald' | 'ocean' | 'gold' | 'herbal';
@@ -66,6 +73,7 @@ export interface ProductItem {
   id: string;
   name: string;
   subName: string;
+  bottleCount: number; // Paket Pribadi: 1 Botol, Paket Family: 3 Botol, Paket Reseller: 5 Botol
   pillCount: number;
   weightGrams: number;
   retailPrice: number;
@@ -82,6 +90,7 @@ export interface ProductItem {
 export interface Member {
   id: string;
   username: string;
+  password?: string; // Password akses login member
   fullName: string;
   whatsapp: string;
   email: string;
@@ -122,7 +131,26 @@ export interface CustomerOrder {
   affiliateRef?: string;
   affiliateProfit?: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  notes?: string;
+  source?: 'web' | 'member_input';
   createdAt: string;
+}
+
+export interface WithdrawalRequest {
+  id: string;
+  memberId: string;
+  memberUsername: string;
+  memberFullName: string;
+  memberWhatsapp: string;
+  amount: number;
+  bankName: string;
+  bankAccountNumber: string;
+  bankAccountHolder: string;
+  notes?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  adminNotes?: string;
+  createdAt: string;
+  processedAt?: string;
 }
 
 export interface ContentAsset {

@@ -35,7 +35,7 @@ export const ToastNotification: React.FC<ToastNotificationProps> = ({ toasts, on
 };
 
 const ToastItem: React.FC<{ toast: ToastData; onDismiss: (id: string) => void }> = ({ toast, onDismiss }) => {
-  const duration = toast.duration || 8000;
+  const duration = toast.duration || 10000;
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {

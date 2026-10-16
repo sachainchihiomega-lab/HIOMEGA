@@ -5,6 +5,7 @@ import {
   ProductItem, 
   Member, 
   CustomerOrder,
+  WithdrawalRequest,
   ColorTheme,
   AppLanguage
 } from '../../types';
@@ -13,7 +14,10 @@ import {
   saveStoredTracking, 
   saveStoredProducts, 
   saveStoredMembers, 
-  saveStoredOrders 
+  saveStoredOrders,
+  getStoredWithdrawals,
+  updateWithdrawalStatus,
+  updateMemberPassword
 } from '../../utils/storage';
 import { 
   LayoutDashboard, 
@@ -34,7 +38,15 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  Truck
+  Truck,
+  Wallet,
+  Key,
+  Eye,
+  EyeOff,
+  MessageCircle,
+  Clock,
+  ArrowUpRight,
+  Filter
 } from 'lucide-react';
 import { ShippingEstimator } from './ShippingEstimator';
 
@@ -66,10 +78,22 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
   onClose
 }) => {
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'tracking' | 'seo' | 'members' | 'theme' | 'images' | 'products' | 'orders' | 'security' | 'shipping'
+    'overview' | 'tracking' | 'seo' | 'members' | 'withdrawals' | 'theme' | 'images' | 'products' | 'orders' | 'security' | 'shipping'
   >('overview');
 
   const [notification, setNotification] = useState<string>('');
+
+  // Withdrawals state synced across app
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRequest[]>(() => getStoredWithdrawals());
+  const [withdrawalFilter, setWithdrawalFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+
+  // Password visibility & edit state for members
+  const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
+  const [editingPasswordMember, setEditingPasswordMember] = useState<Member | null>(null);
+  const [newPasswordInput, setNewPasswordInput] = useState<string>('');
+
+  // Orders filter
+  const [orderFilter, setOrderFilter] = useState<'all' | 'web' | 'member'>('all');
 
   const showNotification = (msg: string) => {
     setNotification(msg);
@@ -254,42 +278,90 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
     showNotification('Stok & Harga produk berhasil diperbarui!');
   };
 
+  // Member Password Management
+  const handleTogglePassword = (id: string) => {
+    setVisiblePasswords(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleOpenPasswordModal = (m: Member) => {
+    setEditingPasswordMember(m);
+    setNewPasswordInput(m.password || 'member123');
+  };
+
+  const handleSaveMemberPassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPasswordMember) return;
+    if (!newPasswordInput.trim()) {
+      alert('Password tidak boleh kosong');
+      return;
+    }
+    const updated = updateMemberPassword(editingPasswordMember.id, newPasswordInput.trim());
+    onUpdateMembers(updated);
+    showNotification(`Password member @${editingPasswordMember.username} berhasil diubah!`);
+    setEditingPasswordMember(null);
+  };
+
+  // Withdrawals Management
+  const handleApproveWithdrawal = (id: string) => {
+    const note = prompt('Masukkan catatan bukti transfer / no ref transfer (opsional):', 'Transfer via KlikBCA - Sukses') || 'Transfer Berhasil';
+    const updated = updateWithdrawalStatus(id, 'approved', note);
+    setWithdrawals(updated);
+    showNotification('Status penarikan komisi diubah menjadi: SUDAH DITRANSFER (APPROVED)');
+  };
+
+  const handleRejectWithdrawal = (id: string) => {
+    const reason = prompt('Masukkan alasan penolakan penarikan komisi:', 'Data rekening tidak sesuai') || 'Pengajuan ditolak oleh Super Admin';
+    const updated = updateWithdrawalStatus(id, 'rejected', reason);
+    setWithdrawals(updated);
+    showNotification('Status penarikan komisi diubah menjadi: DITOLAK (REJECTED)');
+  };
+
+  // Order Status Changer
+  const handleOrderStatus = (orderId: string, newStatus: CustomerOrder['status']) => {
+    const updated = orders.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o));
+    onUpdateOrders(updated);
+    saveStoredOrders(updated);
+    showNotification(`Status pesanan #${orderId} diubah menjadi: ${newStatus.toUpperCase()}`);
+  };
+
+  const pendingWithdrawalsCount = withdrawals.filter(w => w.status === 'pending').length;
+
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/90 backdrop-blur-md flex flex-col overflow-hidden animate-fadeIn">
       {/* Top Navbar */}
-      <div className="bg-slate-950 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white shadow-md">
+      <div className="bg-slate-950 border-b border-slate-800 px-3.5 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white shadow-md flex-shrink-0 text-xs sm:text-base">
             SA
           </div>
-          <div>
-            <h2 className="text-lg font-black text-white">Panel SuperAdmin & Owner HI-OMEGA</h2>
-            <p className="text-xs text-emerald-400">Hak Akses Penuh: Multi-Pixel, Tema, SEO, Member & Stok</p>
+          <div className="min-w-0">
+            <h2 className="text-sm sm:text-lg font-black text-white truncate leading-tight">Panel SuperAdmin HI-OMEGA</h2>
+            <p className="text-[10px] sm:text-xs text-emerald-400 truncate hidden xs:block">Owner & Pengaturan Sistem Penuh</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           {notification && (
-            <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-xl text-xs font-bold animate-pulse">
+            <span className="hidden sm:inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-xl text-xs font-bold animate-pulse">
               ✓ {notification}
             </span>
           )}
           <button
             onClick={onClose}
-            className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5"
+            className="bg-slate-800 hover:bg-slate-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-black transition flex items-center gap-1.5 cursor-pointer"
           >
-            <X className="w-4 h-4" /> Tutup Panel
+            <X className="w-4 h-4" /> <span>Tutup</span>
           </button>
         </div>
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar Tabs */}
-        <div className="w-64 bg-slate-950 border-r border-slate-800 p-4 space-y-1 overflow-y-auto">
+      <div className="flex-1 flex overflow-hidden flex-col md:flex-row">
+        {/* Sidebar Tabs (Horizontal scroll on mobile, vertical sidebar on desktop) */}
+        <div className="w-full md:w-64 bg-slate-950 border-b md:border-b-0 md:border-r border-slate-800 p-2 md:p-4 flex flex-row md:flex-col gap-1 overflow-x-auto md:overflow-y-auto flex-shrink-0 no-scrollbar">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'overview' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -299,7 +371,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('tracking')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'tracking' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -309,7 +381,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('seo')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'seo' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -319,7 +391,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('members')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'members' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -328,8 +400,25 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
           </button>
 
           <button
+            onClick={() => setActiveTab('withdrawals')}
+            className={`flex items-center justify-between gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
+              activeTab === 'withdrawals' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Wallet className="w-4 h-4" />
+              <span>Penarikan Komisi</span>
+            </div>
+            {pendingWithdrawalsCount > 0 && (
+              <span className="bg-amber-400 text-slate-950 font-black text-[10px] px-2 py-0.5 rounded-full animate-pulse">
+                {pendingWithdrawalsCount}
+              </span>
+            )}
+          </button>
+
+          <button
             onClick={() => setActiveTab('theme')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'theme' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -339,7 +428,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('images')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'images' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -349,7 +438,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('products')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'products' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -359,7 +448,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('orders')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'orders' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -369,7 +458,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('shipping')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'shipping' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -379,7 +468,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
 
           <button
             onClick={() => setActiveTab('security')}
-            className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition text-left ${
+            className={`flex items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 md:py-3 rounded-xl md:rounded-2xl text-xs font-bold transition text-left whitespace-nowrap md:whitespace-normal flex-shrink-0 cursor-pointer ${
               activeTab === 'security' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-900 hover:text-white'
             }`}
           >
@@ -389,7 +478,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
         </div>
 
         {/* Content Pane */}
-        <div className="flex-1 bg-slate-900 p-6 overflow-y-auto text-slate-100">
+        <div className="flex-1 bg-slate-900 p-3.5 sm:p-6 lg:p-8 overflow-y-auto text-slate-100">
           {/* TAB 1: OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
@@ -814,6 +903,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
                         <th className="p-3">Rank</th>
                         <th className="p-3">Nama Member</th>
                         <th className="p-3">Username / Link</th>
+                        <th className="p-3">Password Akses</th>
                         <th className="p-3">Total Botol Terjual</th>
                         <th className="p-3">Total Komisi</th>
                         <th className="p-3">Status</th>
@@ -823,50 +913,302 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
                     <tbody className="divide-y divide-slate-700/60 font-medium">
                       {[...members]
                         .sort((a, b) => b.totalSoldPcs - a.totalSoldPcs)
-                        .map((mem, idx) => (
-                          <tr key={mem.id} className="hover:bg-slate-700/30">
-                            <td className="p-3 font-black text-sm">
-                              {idx === 0 ? '🥇 #1' : idx === 1 ? '🥈 #2' : idx === 2 ? '🥉 #3' : `#${idx + 1}`}
-                            </td>
-                            <td className="p-3 font-bold text-white">{mem.fullName}</td>
-                            <td className="p-3 font-mono text-emerald-400">?ref={mem.customSlug}</td>
-                            <td className="p-3 font-black text-amber-400 text-sm">{mem.totalSoldPcs} Pcs</td>
-                            <td className="p-3 font-black text-emerald-400 text-sm">
-                              Rp {mem.totalCommissionRp.toLocaleString('id-ID')}
-                            </td>
-                            <td className="p-3">
-                              <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
-                                mem.status === 'active' ? 'bg-emerald-900/60 text-emerald-300' :
-                                mem.status === 'pending' ? 'bg-amber-900/60 text-amber-300' :
-                                'bg-rose-900/60 text-rose-300'
-                              }`}>
-                                {mem.status}
-                              </span>
-                            </td>
-                            <td className="p-3 text-right space-x-1">
-                              {mem.status !== 'active' && (
-                                <button
-                                  onClick={() => handleToggleMemberStatus(mem.id, 'active')}
-                                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold"
-                                >
-                                  Aktifkan (Verifikasi 5 Pcs)
-                                </button>
-                              )}
-                              {mem.status === 'active' && (
-                                <button
-                                  onClick={() => handleToggleMemberStatus(mem.id, 'suspended')}
-                                  className="bg-rose-600/80 hover:bg-rose-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold"
-                                >
-                                  Nonaktifkan
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
+                        .map((mem, idx) => {
+                          const cleanPhone = mem.whatsapp.replace(/[^0-9]/g, '');
+                          const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+
+                          return (
+                            <tr key={mem.id} className="hover:bg-slate-700/30">
+                              <td className="p-3 font-black text-sm">
+                                {idx === 0 ? '🥇 #1' : idx === 1 ? '🥈 #2' : idx === 2 ? '🥉 #3' : `#${idx + 1}`}
+                              </td>
+                              <td className="p-3">
+                                <div className="font-bold text-white text-sm">{mem.fullName}</div>
+                                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 mt-0.5">
+                                  <span>{mem.whatsapp}</span>
+                                  <a
+                                    href={`https://wa.me/${waPhone}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-emerald-400 hover:text-emerald-300 font-bold underline flex items-center gap-0.5"
+                                  >
+                                    <MessageCircle className="w-3 h-3" /> WA
+                                  </a>
+                                </div>
+                              </td>
+                              <td className="p-3 font-mono text-emerald-400">
+                                <div>@{mem.username}</div>
+                                <div className="text-[10px] text-slate-400">?ref={mem.customSlug}</div>
+                              </td>
+                              <td className="p-3">
+                                <div className="flex items-center gap-1.5 bg-slate-900/90 px-2.5 py-1 rounded-xl border border-slate-700/80 w-fit">
+                                  <Key className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                                  <span className="font-mono text-xs font-black text-amber-300">
+                                    {visiblePasswords[mem.id] ? (mem.password || 'member123') : '••••••••'}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleTogglePassword(mem.id)}
+                                    className="text-slate-400 hover:text-white p-0.5 cursor-pointer transition"
+                                    title={visiblePasswords[mem.id] ? "Sembunyikan password" : "Lihat password"}
+                                  >
+                                    {visiblePasswords[mem.id] ? <EyeOff className="w-3.5 h-3.5 text-amber-400" /> : <Eye className="w-3.5 h-3.5" />}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenPasswordModal(mem)}
+                                    className="text-[10px] bg-slate-800 hover:bg-slate-700 text-teal-300 font-black px-2 py-0.5 rounded-md border border-slate-700 transition ml-1 cursor-pointer"
+                                  >
+                                    Ubah
+                                  </button>
+                                </div>
+                              </td>
+                              <td className="p-3 font-black text-amber-400 text-sm">{mem.totalSoldPcs} Pcs</td>
+                              <td className="p-3 font-black text-emerald-400 text-sm">
+                                Rp {mem.totalCommissionRp.toLocaleString('id-ID')}
+                              </td>
+                              <td className="p-3">
+                                <span className={`px-2 py-0.5 rounded-full font-bold uppercase text-[10px] ${
+                                  mem.status === 'active' ? 'bg-emerald-900/60 text-emerald-300' :
+                                  mem.status === 'pending' ? 'bg-amber-900/60 text-amber-300' :
+                                  'bg-rose-900/60 text-rose-300'
+                                }`}>
+                                  {mem.status}
+                                </span>
+                              </td>
+                              <td className="p-3 text-right space-x-1">
+                                {mem.status !== 'active' && (
+                                  <button
+                                    onClick={() => handleToggleMemberStatus(mem.id, 'active')}
+                                    className="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
+                                  >
+                                    Aktifkan
+                                  </button>
+                                )}
+                                {mem.status === 'active' && (
+                                  <button
+                                    onClick={() => handleToggleMemberStatus(mem.id, 'suspended')}
+                                    className="bg-rose-600/80 hover:bg-rose-600 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
+                                  >
+                                    Nonaktifkan
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </table>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* TAB: PENARIKAN KOMISI (SYNC SUPER ADMIN & MEMBER) */}
+          {activeTab === 'withdrawals' && (
+            <div className="space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h3 className="text-2xl font-black text-white">Manajemen Pengajuan Penarikan Komisi Member</h3>
+                  <p className="text-sm text-slate-400 mt-1">
+                    Verifikasi, setujui, dan catat bukti transfer pencairan komisi penjualan member / affiliate.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-bold text-slate-400">Filter:</span>
+                  {(['all', 'pending', 'approved', 'rejected'] as const).map((flt) => (
+                    <button
+                      key={flt}
+                      onClick={() => setWithdrawalFilter(flt)}
+                      className={`text-xs font-black px-3 py-1.5 rounded-xl transition cursor-pointer capitalize ${
+                        withdrawalFilter === flt
+                          ? 'bg-emerald-600 text-white shadow-md'
+                          : 'bg-slate-800 text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      {flt === 'all' ? 'Semua' : flt === 'pending' ? 'Menunggu Transfer' : flt === 'approved' ? 'Sudah Ditransfer' : 'Ditolak'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Metrics cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700">
+                  <div className="text-xs text-slate-400 font-bold uppercase">Total Ditransfer (Approved)</div>
+                  <div className="text-2xl font-black text-emerald-400 mt-1">
+                    Rp {withdrawals.filter(w => w.status === 'approved').reduce((sum, w) => sum + w.amount, 0).toLocaleString('id-ID')}
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">
+                    {withdrawals.filter(w => w.status === 'approved').length} penarikan sukses
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/80 p-5 rounded-2xl border border-amber-600/50">
+                  <div className="text-xs text-amber-300 font-bold uppercase">Menunggu Transfer (Pending)</div>
+                  <div className="text-2xl font-black text-amber-300 mt-1">
+                    Rp {withdrawals.filter(w => w.status === 'pending').reduce((sum, w) => sum + w.amount, 0).toLocaleString('id-ID')}
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">
+                    {withdrawals.filter(w => w.status === 'pending').length} pengajuan belum diproses
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700">
+                  <div className="text-xs text-slate-400 font-bold uppercase">Total Semua Pengajuan</div>
+                  <div className="text-2xl font-black text-white mt-1">
+                    {withdrawals.length} Pengajuan
+                  </div>
+                  <div className="text-xs text-slate-400 mt-1">Seluruh riwayat penarikan affiliate</div>
+                </div>
+              </div>
+
+              {/* Withdrawals list */}
+              {withdrawals.filter(w => {
+                if (withdrawalFilter === 'pending') return w.status === 'pending';
+                if (withdrawalFilter === 'approved') return w.status === 'approved';
+                if (withdrawalFilter === 'rejected') return w.status === 'rejected';
+                return true;
+              }).length === 0 ? (
+                <div className="p-8 text-center text-slate-400 bg-slate-800/40 rounded-3xl border border-slate-800">
+                  <Wallet className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <p className="text-base font-bold">Tidak ada data pengajuan penarikan komisi pada filter ini.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {withdrawals
+                    .filter(w => {
+                      if (withdrawalFilter === 'pending') return w.status === 'pending';
+                      if (withdrawalFilter === 'approved') return w.status === 'approved';
+                      if (withdrawalFilter === 'rejected') return w.status === 'rejected';
+                      return true;
+                    })
+                    .map((wd) => {
+                      const cleanPhone = wd.memberWhatsapp.replace(/[^0-9]/g, '');
+                      const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+                      const isPending = wd.status === 'pending';
+
+                      return (
+                        <div
+                          key={wd.id}
+                          className={`bg-slate-800/90 p-5 rounded-2xl border space-y-3 shadow-md ${
+                            isPending ? 'border-amber-500/80 bg-slate-800' : 'border-slate-700'
+                          }`}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-700/60 pb-2.5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-sm sm:text-base font-black text-emerald-400">#{wd.id}</span>
+                              <span className="text-xs text-slate-400">
+                                • {new Date(wd.createdAt).toLocaleDateString('id-ID', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                              <span className="font-bold text-white text-xs">
+                                Member: <strong>{wd.memberFullName}</strong> (@{wd.memberUsername})
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full ${
+                                wd.status === 'approved' ? 'bg-emerald-900 text-emerald-300 border border-emerald-700' :
+                                wd.status === 'rejected' ? 'bg-rose-900 text-rose-300 border border-rose-700' :
+                                'bg-amber-900/80 text-amber-300 border border-amber-700'
+                              }`}>
+                                {wd.status === 'approved' ? '✓ Sudah Ditransfer' :
+                                 wd.status === 'rejected' ? '✗ Ditolak' :
+                                 '⏳ Menunggu Transfer'}
+                              </span>
+                              <span className="text-base sm:text-lg font-black text-amber-300 font-mono bg-slate-900 px-3 py-1 rounded-xl border border-slate-700">
+                                Rp {wd.amount.toLocaleString('id-ID')}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
+                            <div>
+                              <div className="text-slate-400 font-bold mb-1">Rekening Tujuan Pencairan:</div>
+                              <div className="text-white font-black text-sm bg-slate-900/80 p-2.5 rounded-xl border border-slate-700">
+                                <div>Bank / E-Wallet: <span className="text-emerald-400">{wd.bankName}</span></div>
+                                <div>No. Rekening: <span className="text-amber-300 font-mono">{wd.bankAccountNumber}</span></div>
+                                <div>Atas Nama: <span className="text-white">{wd.bankAccountHolder}</span></div>
+                              </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className="text-slate-400 font-bold">WhatsApp Member:</span>
+                                <strong className="text-emerald-300 font-mono">{wd.memberWhatsapp}</strong>
+                                <a
+                                  href={`https://wa.me/${waPhone}?text=${encodeURIComponent(
+                                    `Halo Kak ${wd.memberFullName} (@${wd.memberUsername}), terkait pengajuan penarikan komisi #${wd.id} sebesar Rp ${wd.amount.toLocaleString('id-ID')} ke rekening ${wd.bankName} ${wd.bankAccountNumber}...`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-emerald-400 hover:text-emerald-300 text-[10px] font-black underline flex items-center gap-0.5"
+                                >
+                                  <MessageCircle className="w-3 h-3" /> Chat Member
+                                </a>
+                              </div>
+
+                              {wd.notes && (
+                                <div className="text-[11px] text-slate-300">
+                                  <span className="text-slate-400 font-bold">Catatan Member: </span>
+                                  <em>{wd.notes}</em>
+                                </div>
+                              )}
+
+                              {wd.adminNotes && (
+                                <div className="text-[11px] bg-slate-900/70 p-2 rounded-lg border border-slate-700 text-emerald-300 font-bold">
+                                  <span>Catatan Transfer: </span>
+                                  <span>{wd.adminNotes}</span>
+                                  {wd.processedAt && (
+                                    <span className="text-[10px] text-slate-400 block font-normal mt-0.5">
+                                      Diproses: {new Date(wd.processedAt).toLocaleString('id-ID')}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="pt-2 border-t border-slate-700/60 flex items-center justify-end gap-2">
+                            {isPending ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRejectWithdrawal(wd.id)}
+                                  className="px-3 py-1.5 bg-rose-700 hover:bg-rose-600 text-white text-xs font-black rounded-xl transition cursor-pointer flex items-center gap-1"
+                                >
+                                  <X className="w-3.5 h-3.5" /> Tolak
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveWithdrawal(wd.id)}
+                                  className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black rounded-xl transition shadow-md cursor-pointer flex items-center gap-1"
+                                >
+                                  <Check className="w-3.5 h-3.5" /> Konfirmasi Transfer (Approve)
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleApproveWithdrawal(wd.id)}
+                                className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs font-bold rounded-xl transition cursor-pointer"
+                              >
+                                Edit Catatan / No. Ref
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              )}
             </div>
           )}
 
@@ -1052,7 +1394,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
                       <img src={p.image} alt={p.name} className="w-14 h-14 object-cover rounded-xl" />
                       <div>
                         <h4 className="font-bold text-white text-base leading-snug">{p.name}</h4>
-                        <div className="text-xs text-slate-400">{p.pillCount} Kapsul • {p.weightGrams} gram</div>
+                        <div className="text-xs text-slate-400">{p.pillCount} Kapsul • {p.weightGrams}g (@75g/botol)</div>
                       </div>
                     </div>
 
@@ -1083,65 +1425,194 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
             </div>
           )}
 
-          {/* TAB 8: CUSTOMER ORDERS */}
+          {/* TAB 8: CUSTOMER ORDERS (SYNC DENGAN WEB & MEMBER INPUT) */}
           {activeTab === 'orders' && (
             <div className="space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="text-2xl font-black text-white">Daftar Transaksi & Pesanan Masuk</h3>
                   <p className="text-sm text-slate-400 mt-1">
-                    Pesanan dari form website langsung terekam dan bisa dipantau status ekspedisinya.
+                    Pesanan dari form website dan input manual member affiliate langsung terekam otomatis dan tersinkronisasi.
                   </p>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-bold text-slate-400">Sumber:</span>
+                  {(['all', 'web', 'member'] as const).map((flt) => {
+                    const count = flt === 'all' ? orders.length :
+                                  flt === 'web' ? orders.filter(o => o.source !== 'member_input').length :
+                                  orders.filter(o => o.source === 'member_input').length;
+                    return (
+                      <button
+                        key={flt}
+                        onClick={() => setOrderFilter(flt)}
+                        className={`text-xs font-black px-3 py-1.5 rounded-xl transition cursor-pointer capitalize ${
+                          orderFilter === flt
+                            ? 'bg-emerald-600 text-white shadow-md'
+                            : 'bg-slate-800 text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {flt === 'all' ? 'Semua' : flt === 'web' ? 'Form Web' : 'Input Member'} ({count})
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {orders.length === 0 ? (
+              {orders
+                .filter(o => {
+                  if (orderFilter === 'web') return o.source !== 'member_input';
+                  if (orderFilter === 'member') return o.source === 'member_input';
+                  return true;
+                }).length === 0 ? (
                 <div className="p-8 text-center text-slate-400 bg-slate-800/40 rounded-3xl border border-slate-800">
-                  Belum ada pesanan masuk. Pesanan pelanggan melalui form online akan tampil di sini.
+                  <ShoppingBag className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <p className="text-base font-bold">Tidak ada pesanan masuk pada filter ini.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {orders.map((ord) => (
-                    <div key={ord.id} className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-2">
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-emerald-400 font-black">#{ord.id}</span>
-                          <span className="text-xs text-slate-400">({new Date(ord.createdAt).toLocaleDateString('id-ID')})</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs bg-slate-700 text-slate-200 px-2.5 py-0.5 rounded-full font-bold">
-                            Kurir: {ord.courier}
-                          </span>
-                          <span className="text-xs bg-emerald-900 text-emerald-300 px-2.5 py-0.5 rounded-full font-black uppercase">
-                            {ord.status}
-                          </span>
-                        </div>
-                      </div>
+                  {orders
+                    .filter(o => {
+                      if (orderFilter === 'web') return o.source !== 'member_input';
+                      if (orderFilter === 'member') return o.source === 'member_input';
+                      return true;
+                    })
+                    .map((ord) => {
+                      const cleanPhone = ord.customerWhatsapp.replace(/[^0-9]/g, '');
+                      const waPhone = cleanPhone.startsWith('0') ? '62' + cleanPhone.slice(1) : cleanPhone;
+                      const isMemberInput = ord.source === 'member_input';
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                        <div>
-                          <span className="text-slate-400 block">Penerima:</span>
-                          <span className="font-bold text-white">{ord.customerName} ({ord.customerWhatsapp})</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-400 block">Tujuan:</span>
-                          <span className="text-slate-200">{ord.destinationCity}, {ord.destinationProvince}</span>
-                        </div>
-                        <div>
-                          <span className="text-slate-400 block">Total Tagihan:</span>
-                          <span className="font-black text-emerald-400 text-sm">
-                            Rp {ord.grandTotal.toLocaleString('id-ID')}
-                          </span>
-                        </div>
-                      </div>
+                      return (
+                        <div key={ord.id} className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-3 shadow-md">
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-2.5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono text-emerald-400 font-black">#{ord.id}</span>
+                              <span className="text-xs text-slate-400">
+                                ({new Date(ord.createdAt).toLocaleDateString('id-ID', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })})
+                              </span>
+                              {isMemberInput && (
+                                <span className="bg-teal-950 text-teal-300 border border-teal-600/80 px-2 py-0.5 rounded-full text-[10px] font-black uppercase flex items-center gap-1">
+                                  <Users className="w-3 h-3" /> Input Member: @{ord.affiliateRef || 'member'}
+                                </span>
+                              )}
+                            </div>
 
-                      {ord.affiliateRef && (
-                        <div className="text-xs text-amber-300 font-medium">
-                          Ref Affiliate: <strong>@{ord.affiliateRef}</strong> (Komisi: Rp {ord.affiliateProfit?.toLocaleString('id-ID')})
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs bg-slate-700 text-slate-200 px-2.5 py-0.5 rounded-full font-bold">
+                                Kurir: {ord.courier}
+                              </span>
+                              <span className={`text-xs px-2.5 py-0.5 rounded-full font-black uppercase ${
+                                ord.status === 'pending'
+                                  ? 'bg-amber-950 text-amber-300 border border-amber-600/80' :
+                                ord.status === 'delivered'
+                                  ? 'bg-emerald-900 text-emerald-300 border border-emerald-600/80' :
+                                ord.status === 'cancelled'
+                                  ? 'bg-rose-900 text-rose-300 border border-rose-600/80' :
+                                  'bg-teal-900 text-teal-300 border border-teal-600/80'
+                              }`}>
+                                {ord.status === 'pending' ? 'Belum Bayar (Menunggu Transfer)' :
+                                 ord.status === 'delivered' ? 'Selesai / Terkirim' :
+                                 ord.status === 'shipped' ? 'Sedang Dikirim' :
+                                 ord.status === 'processing' ? 'Diproses' :
+                                 'Dibatalkan'}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                            <div>
+                              <span className="text-slate-400 block font-bold">Penerima & Kontak:</span>
+                              <div className="font-bold text-white text-sm mt-0.5">{ord.customerName}</div>
+                              <div className="flex items-center gap-2 text-slate-300 mt-0.5">
+                                <span className="font-mono text-teal-300 font-bold">{ord.customerWhatsapp}</span>
+                                <a
+                                  href={`https://wa.me/${waPhone}?text=${encodeURIComponent(
+                                    `Halo Kak ${ord.customerName}, kami dari Super Admin HI-OMEGA terkait pesanan #${ord.id}...`
+                                  )}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-emerald-400 hover:text-emerald-300 text-[10px] font-black underline flex items-center gap-0.5"
+                                >
+                                  <MessageCircle className="w-3 h-3" /> Chat WA
+                                </a>
+                              </div>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400 block font-bold">Alamat Pengiriman:</span>
+                              <span className="text-slate-200 block mt-0.5 leading-snug">
+                                {ord.addressDetails}, {ord.destinationCity}, {ord.destinationProvince}
+                              </span>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400 block font-bold">Total Pembayaran:</span>
+                              <span className="font-black text-emerald-400 text-base block mt-0.5">
+                                Rp {ord.grandTotal.toLocaleString('id-ID')}
+                              </span>
+                              <span className="text-[11px] text-slate-400 block">
+                                (Ongkir: Rp {ord.shippingCost.toLocaleString('id-ID')})
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Items and notes */}
+                          <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
+                            <span className="text-slate-400 font-bold block mb-1">Rincian Paket Produk:</span>
+                            <div className="space-y-1">
+                              {ord.items.map((it, idx) => (
+                                <div key={idx} className="flex justify-between text-slate-200">
+                                  <span>✓ {it.productName} ({it.qty} Paket)</span>
+                                  <span className="font-bold text-white">Rp {it.totalPrice.toLocaleString('id-ID')}</span>
+                                </div>
+                              ))}
+                            </div>
+                            {ord.notes && (
+                              <div className="mt-2 pt-1.5 border-t border-slate-800 text-[11px] text-amber-300/90">
+                                <span className="font-bold text-slate-400">Catatan: </span>
+                                <em>{ord.notes}</em>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Affiliate Info & Status Changer */}
+                          <div className="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                              {ord.affiliateRef ? (
+                                <span className="text-xs text-amber-300 font-medium">
+                                  Ref Affiliate: <strong>@{ord.affiliateRef}</strong> • Komisi: <strong className="text-emerald-300">Rp {ord.affiliateProfit?.toLocaleString('id-ID') || '0'}</strong>
+                                </span>
+                              ) : (
+                                <span className="text-xs text-slate-500">
+                                  Pesanan Langsung via Website Pusat
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-slate-400">Ubah Status:</span>
+                              <select
+                                value={ord.status}
+                                onChange={(e) => handleOrderStatus(ord.id, e.target.value as CustomerOrder['status'])}
+                                className="bg-slate-900 border border-slate-700 text-xs font-black rounded-xl px-3 py-1.5 text-white focus:outline-none cursor-pointer"
+                              >
+                                <option value="pending">Menunggu Transfer (Pending)</option>
+                                <option value="processing">Sudah Bayar / Diproses</option>
+                                <option value="shipped">Sedang Dikirim (Shipped)</option>
+                                <option value="delivered">Selesai / Terkirim</option>
+                                <option value="cancelled">Dibatalkan (Cancelled)</option>
+                              </select>
+                            </div>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
+                      );
+                    })}
                 </div>
               )}
             </div>
@@ -1218,6 +1689,61 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({
           )}
         </div>
       </div>
+
+      {/* MEMBER PASSWORD EDIT MODAL (SUPER ADMIN BISA MERUBAH PASSWORD MEMBER) */}
+      {editingPasswordMember && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+          <div className="bg-slate-900 border-2 border-emerald-500 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Key className="w-5 h-5 text-amber-400" />
+                <h4 className="text-lg font-black text-white">Ubah Password Akses Member</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingPasswordMember(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-800"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-300">
+              Ubah password login untuk member <strong>{editingPasswordMember.fullName}</strong> (@{editingPasswordMember.username}).
+            </div>
+
+            <form onSubmit={handleSaveMemberPassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-400 mb-1">Password Baru Member: *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Masukkan password baru"
+                  value={newPasswordInput}
+                  onChange={(e) => setNewPasswordInput(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 focus:border-emerald-500 rounded-xl px-3 py-2.5 text-sm font-mono font-bold text-white focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingPasswordMember(null)}
+                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition cursor-pointer"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl text-xs transition shadow-md cursor-pointer"
+                >
+                  Simpan Password Baru
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

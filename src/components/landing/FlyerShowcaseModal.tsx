@@ -130,7 +130,7 @@ export const FlyerShowcaseModal: React.FC<FlyerShowcaseModalProps> = ({
               className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black px-6 py-3 rounded-2xl text-sm sm:text-base shadow-lg transition"
             >
               <ShoppingBag className="w-5 h-5 text-emerald-200" />
-              <span>Pesan Produk Ini (Buka Form)</span>
+              <span>Pesan Produk Ini</span>
             </button>
             <button
               onClick={onClose}

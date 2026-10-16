@@ -32,14 +32,15 @@ import { WhyChooseSection } from './components/landing/WhyChooseSection';
 import { VideoEducationSection } from './components/landing/VideoEducationSection';
 import { ProductCatalogSection } from './components/landing/ProductCatalogSection';
 import { TestimonialSection } from './components/landing/TestimonialSection';
+import { FAQSection } from './components/landing/FAQSection';
 import { Footer } from './components/common/Footer';
 import { FloatingActionButtons } from './components/common/FloatingActionButtons';
-import { VisualProofGallery } from './components/landing/VisualProofGallery';
 import { ToastNotification, ToastData } from './components/common/ToastNotification';
 import { LiveActivityFeed } from './components/common/LiveActivityFeed';
-import { SHIPPING_PARCEL_IMAGE, PRODUCT_REAL_IMAGE } from './data/initialData';
+import { SHIPPING_PARCEL_IMAGE, PRODUCT_REAL_IMAGE, SYMPTOM_DATA } from './data/initialData';
 
 // Modals
+import { HealthIntakeModal } from './components/landing/HealthIntakeModal';
 import { FlyerShowcaseModal } from './components/landing/FlyerShowcaseModal';
 import { OrderModal } from './components/landing/OrderModal';
 import { LoginModal } from './components/admin/LoginModal';
@@ -64,6 +65,7 @@ export default function App() {
   const [activeAffiliate, setActiveAffiliate] = useState<Member | null>(null);
 
   // Modals
+  const [isIntakeOpen, setIsIntakeOpen] = useState<boolean>(false);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
   const [isSuperAdminOpen, setIsSuperAdminOpen] = useState<boolean>(false);
@@ -125,12 +127,27 @@ export default function App() {
       }
     }
 
-    if (keluhanParam && ['jantung', 'hipertensi', 'kolesterol', 'sendi_tulang', 'diabetes', 'lambung', 'stroke_otak', 'paru_respirasi', 'ibu_anak', 'semua'].includes(keluhanParam)) {
+    const storedComplaint = sessionStorage.getItem('hiomega_complaint_selected') as SymptomCategory | null;
+    const validCategories: SymptomCategory[] = [
+      'jantung', 'hipertensi', 'kolesterol', 'sendi_tulang', 
+      'diabetes', 'lambung', 'stroke_otak', 'paru_respirasi', 
+      'ibu_anak', 'pengentalan_darah', 'otak_anak', 'anxiety_depresi', 'autoimun', 'semua'
+    ];
+    if (storedComplaint && validCategories.includes(storedComplaint)) {
+      setCurrentSymptom(storedComplaint);
+    } else if (keluhanParam && validCategories.includes(keluhanParam as SymptomCategory)) {
       setCurrentSymptom(keluhanParam as SymptomCategory);
+      sessionStorage.setItem('hiomega_complaint_selected', keluhanParam);
       setTimeout(() => {
         const elem = document.getElementById('keluhan');
         if (elem) elem.scrollIntoView({ behavior: 'smooth' });
       }, 300);
+    } else {
+      // First access without complaint: Open the health intake questionnaire modal
+      const timer = setTimeout(() => {
+        setIsIntakeOpen(true);
+      }, 600);
+      return () => clearTimeout(timer);
     }
 
     // Returning from consultation back to website to checkout
@@ -139,19 +156,32 @@ export default function App() {
     }
   }, []);
 
-  const handleSelectSymptom = (sym: SymptomCategory) => {
-    setCurrentSymptom(sym);
-    sessionStorage.setItem('hi_omega_quiz_answered', 'true');
+  const handleSelectComplaint = (category: SymptomCategory) => {
+    setCurrentSymptom(category);
+    sessionStorage.setItem('hiomega_complaint_selected', category);
+    setIsIntakeOpen(false);
+
+    const symptomName = SYMPTOM_DATA[category]?.name || 'Semua Khasiat';
+    addToast({
+      type: 'info',
+      title: 'Keluhan Berhasil Dipilih',
+      subtitle: `Menampilkan rekomendasi klinis & terapi untuk: ${symptomName}`,
+      image: PRODUCT_REAL_IMAGE,
+      duration: 6000
+    });
+
     // Scroll smoothly to dynamic symptom section
     setTimeout(() => {
       const elem = document.getElementById('keluhan');
       if (elem) {
         elem.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 150);
+    }, 250);
   };
 
   const handleOpenDashboardByRole = () => {
+    setMembers(getStoredMembers());
+    setOrders(getStoredOrders());
     if (currentUser.role === 'SUPERADMIN') {
       setIsSuperAdminOpen(true);
     } else if (currentUser.role === 'ADMIN') {
@@ -181,6 +211,7 @@ export default function App() {
         currentSymptom={currentSymptom}
         onOpenLogin={() => setIsLoginOpen(true)}
         onOpenRegister={() => setIsRegisterOpen(true)}
+        onOpenIntake={() => setIsIntakeOpen(true)}
         activeAffiliate={activeAffiliate}
         settings={settings}
         currentRole={currentUser.role}
@@ -199,10 +230,12 @@ export default function App() {
 
       {/* Dynamic Symptom Section */}
       <DynamicSymptomSection
+        currentSymptom={currentSymptom}
         onOpenFlyerModal={(title, category) => {
           setFlyerModalState({ isOpen: true, title, category });
         }}
         onScrollToProducts={scrollToProducts}
+        onReopenIntake={() => setIsIntakeOpen(true)}
         settings={settings}
       />
 
@@ -224,11 +257,15 @@ export default function App() {
         settings={settings}
       />
 
-      {/* Visual Proof & Authentic Gallery - High image presence, minimal text */}
-      <VisualProofGallery onScrollToProducts={scrollToProducts} />
-
       {/* Testimonials */}
       <TestimonialSection />
+
+      {/* FAQ & Kandungan & 15 Keluhan Medis (PDF) Section */}
+      <FAQSection
+        settings={settings}
+        activeAffiliate={activeAffiliate}
+        onScrollToProducts={scrollToProducts}
+      />
 
       {/* Footer */}
       <Footer
@@ -243,6 +280,7 @@ export default function App() {
         settings={settings}
         activeAffiliate={activeAffiliate}
         onScrollToProducts={scrollToProducts}
+        onOpenIntake={() => setIsIntakeOpen(true)}
       />
 
       {/* Social Proof Live Activity Feed (Bottom-Left) */}
@@ -252,6 +290,16 @@ export default function App() {
       <ToastNotification toasts={toasts} onDismiss={dismissToast} />
 
       {/* MODALS */}
+      {/* 0. Clinical Health Intake Screener (Appears on Website Access) */}
+      <HealthIntakeModal
+        isOpen={isIntakeOpen}
+        onClose={() => setIsIntakeOpen(false)}
+        onSelectComplaint={handleSelectComplaint}
+        selectedComplaint={currentSymptom}
+        settings={settings}
+        activeAffiliate={activeAffiliate}
+      />
+
       {/* 1. Flyer Zoom Modal */}
       <FlyerShowcaseModal
         isOpen={flyerModalState.isOpen}
@@ -273,7 +321,7 @@ export default function App() {
         onOrderSuccess={(order) => {
           setOrders((prev) => [order, ...prev]);
           const firstItem = order.items[0];
-          const productLabel = firstItem ? `${firstItem.productName} (${firstItem.qty} Botol)` : 'Paket HI-OMEGA';
+          const productLabel = firstItem ? `${firstItem.productName} [${firstItem.qty} Paket]` : 'Paket HI-OMEGA';
           addToast({
             type: 'order_success',
             title: '🎉 Pesanan Berhasil Diterima!',
@@ -292,6 +340,8 @@ export default function App() {
         members={members}
         onLoginSuccess={(user) => {
           setCurrentUser(user);
+          setMembers(getStoredMembers());
+          setOrders(getStoredOrders());
           if (user.role === 'SUPERADMIN') setIsSuperAdminOpen(true);
           else if (user.role === 'ADMIN') setIsAdminOpen(true);
           else if (user.role === 'MEMBER') setIsMemberDashboardOpen(true);
@@ -344,6 +394,7 @@ export default function App() {
           settings={settings}
           onUpdateSettings={setSettings}
           orders={orders}
+          onUpdateOrders={setOrders}
           onClose={() => setIsAdminOpen(false)}
         />
       )}
@@ -354,6 +405,10 @@ export default function App() {
           member={loggedInMemberData}
           onUpdateMember={(updated) => {
             setMembers((prev) => prev.map(m => m.id === updated.id ? updated : m));
+          }}
+          onAddOrder={(newOrder) => {
+            setOrders((prev) => [newOrder, ...prev]);
+            setMembers(getStoredMembers());
           }}
           products={products}
           settings={settings}

@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Logo } from './Logo';
 import { SymptomCategory, Member, SiteSettings } from '../../types';
 import { 
   UserCheck, 
   LogIn, 
-  Sparkles,
-  ShoppingBag,
-  ExternalLink
+  Sparkles
 } from 'lucide-react';
 
 interface HeaderProps {
   currentSymptom: SymptomCategory;
   onOpenLogin: () => void;
   onOpenRegister: () => void;
+  onOpenIntake?: () => void;
   activeAffiliate?: Member | null;
   settings: SiteSettings;
   currentRole: string;
@@ -25,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
   currentSymptom,
   onOpenLogin,
   onOpenRegister,
+  onOpenIntake,
   activeAffiliate,
   settings,
   currentRole,
@@ -32,9 +32,45 @@ export const Header: React.FC<HeaderProps> = ({
   onLogout,
   onScrollToProducts
 }) => {
+  // Sticky header visibility based on scroll direction
+  // "HEADER TETAP STICKY NAMUN SAAT MELAKUKAN SCROLL KE ATAS HALAMAN MAKA OTOMATIS HEADER HIDDEN NAMUN SAAT SCROLL KE BAWAH MAKA SECARA OTOMATIS HEADER TETAP MUNCUL"
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const lastScrollYRef = useRef<number>(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Always visible at the top of the page
+      if (currentScrollY <= 25) {
+        setIsVisible(true);
+        lastScrollYRef.current = currentScrollY;
+        return;
+      }
+
+      // Check scroll direction (reversed: hide when scrolling down, show when scrolling up)
+      if (currentScrollY > lastScrollYRef.current) {
+        // Scrolling DOWN -> Header otomatis hidden
+        setIsVisible(false);
+      } else if (currentScrollY < lastScrollYRef.current) {
+        // Scrolling UP -> Header otomatis muncul
+        setIsVisible(true);
+      }
+
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
-      {/* Top Banner for Trust & Marketplace Shortcuts */}
+    <header 
+      className={`sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-transform duration-300 ease-in-out ${
+        isVisible ? 'translate-y-0' : '-translate-y-full pointer-events-none'
+      }`}
+    >
+      {/* Top Banner for Trust & Reseller CTA */}
       {activeAffiliate ? (
         <div className="bg-gradient-to-r from-emerald-800 to-teal-800 text-white px-4 py-2 text-xs sm:text-sm font-semibold">
           <div className="container mx-auto flex flex-wrap items-center justify-between gap-2">
@@ -44,41 +80,30 @@ export const Header: React.FC<HeaderProps> = ({
                 Layanan Kemitraan Resmi HI-OMEGA: <strong className="text-emerald-200">{activeAffiliate.fullName}</strong>
               </span>
             </div>
-            <span className="text-xs bg-emerald-700/80 text-emerald-100 px-2.5 py-0.5 rounded-full border border-emerald-500">
-              Transaksi Aman Terverifikasi Melalui Website
-            </span>
+            <button
+              type="button"
+              onClick={onOpenRegister}
+              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black px-4 py-1 rounded-full text-xs shadow-md transition active:scale-95 cursor-pointer uppercase tracking-wider border border-amber-300"
+            >
+              <UserCheck className="w-3.5 h-3.5" />
+              <span>MAU JADI RESELLER</span>
+            </button>
           </div>
         </div>
       ) : (
         <div className="bg-gradient-to-r from-teal-950 via-emerald-950 to-slate-950 text-white px-4 py-2 text-xs sm:text-sm font-medium">
-          <div className="container mx-auto flex flex-wrap items-center justify-between gap-2">
-            <span className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-              <span className="font-bold">100% Herbal Alami Berizin BPOM & Halal Indonesia • Siap Kirim ke Seluruh Wilayah Indonesia</span>
+          <div className="container mx-auto flex items-center justify-center text-center">
+            <span className="flex items-center gap-2 flex-wrap justify-center">
+              <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
+              <button
+                type="button"
+                onClick={onOpenRegister}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-5 py-1.5 rounded-full text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-95 cursor-pointer uppercase tracking-wider border-2 border-amber-300"
+              >
+                <UserCheck className="w-4 h-4 text-slate-950" />
+                <span>MAU JADI RESELLER</span>
+              </button>
             </span>
-
-            {/* Official Marketplace Links in Header */}
-            <div className="flex items-center gap-2 text-xs font-black">
-              <a
-                href="https://s.shopee.co.id/W70hOBonR"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 bg-[#EE4D2D] hover:bg-[#d73f1f] text-white px-3 py-1 rounded-xl shadow-sm transition"
-              >
-                <span>Shopee Resmi</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-
-              <a
-                href="https://vt.tokopedia.com/t/ZS9ATgaYMYp59-bQN3l/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 bg-black hover:bg-slate-800 text-white border border-slate-700 px-3 py-1 rounded-xl shadow-sm transition"
-              >
-                <span>TikTok Shop</span>
-                <ExternalLink className="w-3 h-3 text-cyan-300" />
-              </a>
-            </div>
           </div>
         </div>
       )}
@@ -93,13 +118,21 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Clean Nav Links */}
-        <div className="hidden lg:flex items-center gap-7 text-base font-black text-slate-800">
+        <div className="hidden lg:flex items-center gap-6 text-base font-black text-slate-800">
           <a href="#produk" className="hover:text-emerald-700 transition">
             Katalog Produk
           </a>
           <a href="#keluhan" className="hover:text-emerald-700 transition">
             Khasiat Klinis
           </a>
+          {onOpenIntake && (
+            <button 
+              onClick={onOpenIntake}
+              className="text-emerald-800 hover:text-emerald-950 transition cursor-pointer flex items-center gap-1.5"
+            >
+              <span>Pilih Keluhan</span>
+            </button>
+          )}
           <a href="#keunggulan" className="hover:text-emerald-700 transition">
             Keunggulan
           </a>
@@ -109,19 +142,13 @@ export const Header: React.FC<HeaderProps> = ({
           <a href="#testimoni" className="hover:text-emerald-700 transition">
             Testimoni
           </a>
+          <a href="#faq" className="hover:text-emerald-700 transition">
+            FAQ
+          </a>
         </div>
 
-        {/* Action Buttons: Direct Website Order */}
+        {/* Action Buttons: Direct Website Order & Auth Menu */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Website Direct Order Button */}
-          <button
-            onClick={onScrollToProducts}
-            className="flex items-center gap-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-black px-4 sm:px-6 py-2.5 sm:py-3 rounded-2xl shadow-md hover:shadow-lg transition text-sm sm:text-lg border-2 border-emerald-600 cursor-pointer"
-          >
-            <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-100" />
-            <span>Pesan Sekarang (Isi Form)</span>
-          </button>
-
           {/* Auth Menu */}
           {currentRole !== 'GUEST' ? (
             <div className="flex items-center gap-2">

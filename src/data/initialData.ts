@@ -21,81 +21,66 @@ import {
 export const INITIAL_PRODUCTS: ProductItem[] = [
   {
     id: 'hi-omega-60',
-    name: 'HI-OMEGA Sacha Inchi + VCO Capsules',
-    subName: 'Kombinasi Super Nutrisi Nabati Sacha Inchi & Minyak Kelapa Murni (VCO) 60 Kapsul 500mg',
+    name: 'PAKET PRIBADI',
+    subName: 'Paket Pribadi 1 Botol (Isi 60 Kapsul @500mg - Segel Resmi Hologram)',
+    bottleCount: 1,
     pillCount: 60,
-    weightGrams: 150,
+    weightGrams: 75, // 1 botol berat 75 gram
     retailPrice: 100000,
     affiliateBasePrice: 70000,
     promoPrice: 100000,
     stock: 250,
-    description: 'Kapsul herbal alami kaya Omega 3-6-9 dan VCO untuk memelihara kesehatan jantung, asam urat, kolesterol, dan vitalitas tubuh harian.',
+    description: 'Kombinasi keajaiban alam sumber nabati terbaik di dunia: Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial disetiap kapsul untuk memelihara kesehatan jantung, asam urat, kolesterol, dan vitalitas tubuh harian.',
     keyBenefits: [
-      'Membantu menjaga kesehatan jantung & pembuluh darah',
-      'Mendukung kadar asam urat & kolesterol tetap normal',
-      'Membantu memelihara kesehatan sendi & tulang',
-      '100% Bahan Alami Tanpa Bahan Kimia Obat'
+      'Isi 1 Botol Resmi (tepat 60 kapsul herbal, berat 75 gram)',
+      'Kombinasi Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial',
+      'Membantu menjaga kesehatan jantung, sendi & pembuluh darah',
+      '100% Nabati Murni Bebas Logam Berat, Izin BPOM RI & Halal MUI'
     ],
-    badge: 'PALING LARIS',
+    badge: '1 BOTOL (60 KAPSUL)',
     image: PRODUCT_REAL_IMAGE
   },
   {
-    id: 'hi-omega-100',
-    name: 'HI-OMEGA Sacha Inchi + EPA & DHA Capsules',
-    subName: 'Formula Ekstra Konsentrat 100 Kapsul (500mg)',
-    pillCount: 100,
-    weightGrams: 220,
-    retailPrice: 150000,
-    affiliateBasePrice: 105000,
-    promoPrice: 150000,
-    stock: 180,
-    description: 'Kemasan hemat 100 kapsul dengan konsentrat EPA & DHA alami untuk pemulihan intensif stroke, hipertensi menahun, dan daya ingat saraf.',
-    keyBenefits: [
-      'Menstabilkan tekanan darah sistolik & diastolik',
-      'Meningkatkan elastisitas pembuluh darah & sirkulasi ke otak',
-      'Rasio sempurna Omega-3, 6, 9 nabati bebas merkuri laut',
-      'Membantu metabolisme energi & regenerasi sel'
-    ],
-    badge: 'FORMULA SPESIAL',
-    image: SOFTGELS_SPILL_IMAGE
-  },
-  {
     id: 'hi-omega-paket-3',
-    name: 'Paket Hemat 3 Botol Terapi Rutin',
-    subName: '3 Botol HI-OMEGA Sacha Inchi (Total 180 Kapsul)',
+    name: 'PAKET FAMILY',
+    subName: 'Paket Family 3 Botol (Total 180 Kapsul - @60 Kapsul/Botol)',
+    bottleCount: 3,
     pillCount: 180,
-    weightGrams: 450,
+    weightGrams: 225, // 3 botol x 75 gram = 225 gram
     retailPrice: 300000,
     affiliateBasePrice: 200000,
     promoPrice: 275000,
     stock: 95,
-    description: 'Paket rekomendasi dokter keluarga untuk konsumsi rutin 1 bulan penuh bersama pasangan.',
+    isPopular: true,
+    description: 'Paket terapi intensif 3 botol (masing-masing botol berisi 60 kapsul, total 180 kapsul) untuk konsumsi rutin 1 bulan penuh bersama pasangan atau keluarga.',
     keyBenefits: [
-      'Hemat Rp 25.000 dari harga satuan',
-      'Bonus konsultasi kesehatan via WhatsApp berkala',
+      'Isi 3 Botol (Masing-masing botol berisi 60 kapsul @75 gram, total 180 kapsul)',
+      'Kombinasi Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial',
+      'Lebih hemat Rp 25.000 dibanding pembelian satuan',
       'Cukup untuk program pemulihan 30-45 hari'
     ],
-    badge: 'HEMAT Rp 25.000',
+    badge: '3 BOTOL (HEMAT Rp 25.000)',
     image: PRODUCT_REAL_IMAGE
   },
   {
     id: 'hi-omega-member-5',
-    name: 'Paket Kemitraan Member / Reseller (5 Botol)',
-    subName: 'Syarat Resmi Menjadi Member & Membuka Toko Affiliate Sendiri',
+    name: 'PAKET RESELLER',
+    subName: 'Paket Reseller 5 Botol (Total 300 Kapsul - @60 Kapsul/Botol)',
+    bottleCount: 5,
     pillCount: 300,
-    weightGrams: 750,
+    weightGrams: 375, // 5 botol x 75 gram = 375 gram
     retailPrice: 500000,
     affiliateBasePrice: 350000,
     promoPrice: 350000,
     stock: 120,
-    description: 'Hanya Rp 70.000/botol! Langsung berhak menjadi Member resmi HI-OMEGA, dapat Landing Page pribadi, akses Cek Ongkir & Bank Konten.',
+    description: 'Hanya Rp 70.000/botol! Paket kemitraan 5 botol (masing-masing botol berisi 60 kapsul, total 300 kapsul). Langsung resmi menjadi Member Affiliate, dapat landing page khusus & bank konten.',
     keyBenefits: [
+      'Isi 5 Botol (Masing-masing botol berisi 60 kapsul @75 gram, total 300 kapsul)',
+      'Kombinasi Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial',
       'Harga modal super murah: Rp 70.000 / botol',
-      'Bisa dijual kembali seharga Rp 100.000 - Rp 150.000',
-      'Keuntungan langsung hingga Rp 30.000 - Rp 80.000 per botol',
-      'Mendapatkan website landing page khusus dengan nomor WA Anda'
+      'Mendapatkan website landing page khusus dengan nomor WhatsApp Anda'
     ],
-    badge: 'PAKET MEMBER RESMI',
+    badge: '5 BOTOL (PAKET RESELLER)',
     image: BUNDLE_PACK_IMAGE
   }
 ];
@@ -341,29 +326,201 @@ export const SYMPTOM_DATA: Record<SymptomCategory, SymptomDetail> = {
     highlightQuote: '“Anak saya sekarang jauh lebih fokus belajar di kelas, dan nilainya meningkat pesat!”',
     accentColor: 'from-rose-500 to-pink-800'
   },
+  pengentalan_darah: {
+    id: 'pengentalan_darah',
+    name: 'Pengentalan Darah',
+    iconName: 'Droplets',
+    badge: 'PENCEGAHAN TROMBOSIS & SUMBATAN',
+    headline: 'Aliran Darah Kental Menghambat Oksigen ke Otak & Organ Vital',
+    subheadline: 'Asam lemak tak jenuh ganda mengencerkan darah secara alami tanpa efek samping perdarahan.',
+    warningText: 'Darah yang terlalu kental membebani kerja pompa jantung dan memicu pembekuan darah (trombosis).',
+    symptomsList: [
+      'Sering kesemutan menahun di jari-jari tangan dan kaki',
+      'Sakit kepala berat, pusing berputar, dan pandangan berkunang-kunang',
+      'Tangan dan telapak kaki sering terasa dingin atau membiru',
+      'Badan cepat lelah, loyo, dan sering mengantuk di siang hari',
+      'Hasil tes D-Dimer atau kekentalan darah di atas normal'
+    ],
+    mechanismTitle: 'Bagaimana HI-OMEGA Mengatasi Pengentalan Darah?',
+    mechanismSteps: [
+      { title: 'Anti-Agregasi Trombosit Alami', desc: 'Mencegah keping darah saling menempel dan menggumpal di pembuluh.' },
+      { title: 'Mengencerkan Viskositas Darah', desc: 'Omega-3 meningkatkan fluiditas membran eritrosit sehingga darah mengalir lancar.' },
+      { title: 'Melancarkan Mikrosirkulasi', desc: 'Menjangkau pembuluh kapiler terkecil di ujung jari dan otak.' },
+      { title: 'Meningkatkan Pasokan Oksigen Sel', desc: 'Tubuh terasa lebih bugar, bebas kesemutan, dan kepala terasa ringan.' }
+    ],
+    highlightQuote: '“Darah kental saya normal kembali, kesemutan di tangan dan kaki hilang total setelah rutin minum HI-OMEGA.”',
+    accentColor: 'from-red-600 to-rose-900'
+  },
+  otak_anak: {
+    id: 'otak_anak',
+    name: 'Kecerdasan Otak Anak',
+    iconName: 'Brain',
+    badge: 'NUTRISI EMAS PERKEMBANGAN OTAK',
+    headline: 'Optimalkan Potensi IQ, Daya Ingat & Konsentrasi Anak Sejak Dini',
+    subheadline: 'DHA & EPA nabati murni bebas merkuri laut untuk menutrisi miliaran sinaps sel saraf otak anak.',
+    warningText: 'Kekurangan asam lemak esensial Omega-3 pada masa pertumbuhan dapat menghambat daya tangkap dan fokus belajar.',
+    symptomsList: [
+      'Anak sulit fokus belajar dan gampang terdistraksi',
+      'Daya ingat kurang tajam, sering lupa materi pelajaran',
+      'Mata cepat lelah akibat paparan layar gadget / ponsel',
+      'Gampang lemas, kurang berenergi saat aktivitas sekolah',
+      'Susah mengonsumsi suplemen ikan laut karena bau amis atau mual'
+    ],
+    mechanismTitle: 'Mekanisme HI-OMEGA Menutrisi Otak Anak',
+    mechanismSteps: [
+      { title: 'Membangun Membran Sel Saraf Otak', desc: 'DHA nabati adalah blok pembangun esensial jaringan abu-abu otak.' },
+      { title: 'Meningkatkan Kecepatan Hantaran Sinaps', desc: 'Mempercepat transmisi sinyal saraf sehingga anak lebih tanggap dan kritis.' },
+      { title: 'Melindungi Retina & Penglihatan', desc: 'Menutrisi makula mata anak dari kerusakan cahaya biru gadget.' },
+      { title: '100% Nabati Murni Bebas Merkuri', desc: 'Aman untuk anak, kapsul lembut bisa digunting dan dicampur ke susu atau madu.' }
+    ],
+    highlightQuote: '“Anak saya sekarang jauh lebih fokus belajar, daya ingatnya meningkat dan prestasinya naik!”',
+    accentColor: 'from-amber-600 to-orange-800'
+  },
+  anxiety_depresi: {
+    id: 'anxiety_depresi',
+    name: 'Depresi & Anxiety (Kecemasan)',
+    iconName: 'Heart',
+    badge: 'PENENANG SISTEM SARAF ALAMI',
+    headline: 'Atasi Rasa Cemas Berlebih, Panic Attack & Gangguan Suasana Hati',
+    subheadline: 'EPA & DHA nabati menyeimbangkan neurotransmitter serotonin & dopamin untuk pikiran tenang dan tidur lelap.',
+    warningText: 'Peradangan kronis pada sistem saraf pusat terbukti memicu gangguan kecemasan (anxiety) dan depresi berkepanjangan.',
+    symptomsList: [
+      'Sering cemas mendadak, gelisah, atau jantung berdebar kencang (panic attack)',
+      'Susah tidur nyenyak (insomnia) dan pikiran overthinking di malam hari',
+      'Sering keringat dingin, nafas sesak tanpa sebab fisik yang jelas',
+      'Suasana hati (mood) mudah drop, murung, dan kehilangan motivasi',
+      'Otot pundak dan rahang sering tegang tanpa disadari'
+    ],
+    mechanismTitle: 'Cara Kerja HI-OMEGA Menenangkan Pikiran',
+    mechanismSteps: [
+      { title: 'Meredakan Neuroinflamasi Otak', desc: 'EPA menurunkan senyawa sitokin radang yang memicu kecemasan di otak.' },
+      { title: 'Mendukung Sintesis Serotonin & Dopamin', desc: 'Menyeimbangkan hormon bahagia alami tubuh untuk stabilitas emosi.' },
+      { title: 'Menstabilkan Respon Saraf Otonom', desc: 'Menenangkan denyut jantung berdebar dan mengurangi serangan panik.' },
+      { title: 'Meningkatkan Kualitas Tidur', desc: 'Membantu tubuh rileks alami sehingga bangun pagi terasa segar dan tenang.' }
+    ],
+    highlightQuote: '“Tidur saya jauh lebih nyenyak, dada yang sering berdebar cemas sekarang tenang sekali.”',
+    accentColor: 'from-violet-700 to-indigo-900'
+  },
+  autoimun: {
+    id: 'autoimun',
+    name: 'Auto Imun & Imunitas Tubuh',
+    iconName: 'ShieldCheck',
+    badge: 'MODULASI SISTEM KEKEBALAN ALAMI',
+    headline: 'Keseimbangan Respon Imun Alami Tanpa Menekan Daya Tahan Tubuh',
+    subheadline: 'Perpaduan Sacha Inchi + VCO meredakan badai sitokin dan meregulasi sel imunitas yang menyerang tubuh sendiri.',
+    warningText: 'Penyakit autoimun memicu peradangan kronis pada organ, sendi, dan kulit jika sistem imun tidak dimodulasi.',
+    symptomsList: [
+      'Sering lelah ekstrem (fatigue) berkepanjangan tanpa sebab jelas',
+      'Nyeri sendi dan otot berpindah-pindah disertai radang',
+      'Ruam merah di kulit, sensitif terhadap sinar matahari atau alergi makanan',
+      'Pencernaan sensitif (leaky gut) dan sering kambuh saat stres',
+      'Kadar inflamasi tubuh (CRP / LED) sering menunjukkan angka tinggi'
+    ],
+    mechanismTitle: 'Peran Modulator Imun HI-OMEGA',
+    mechanismSteps: [
+      { title: 'Imunomodulator Alami', desc: 'Menyeimbangkan rasio sel T-helper tanpa menurunkan imunitas pertahanan tubuh.' },
+      { title: 'Menekan Badai Sitokin Radang', desc: 'Omega-3 menghentikan produksi prostaglandin dan leukotrien perusak sel.' },
+      { title: 'Memulihkan Integritas Dinding Usus', desc: 'Asam Laurat VCO memperbaiki mikrobioma usus dan mencegah leaky gut.' },
+      { title: 'Regenerasi Sel Tubuh', desc: 'Antioksidan tokoferol melindungi jaringan tubuh yang meradang agar cepat pulih.' }
+    ],
+    highlightQuote: '“Kambuh-kambuhan autoimun saya berkurang drastis, badan jauh lebih kuat dan tidak gampang drop!”',
+    accentColor: 'from-teal-700 to-emerald-900'
+  },
+  kanker: {
+    id: 'kanker',
+    name: 'Kanker (Uji Lab & Pendamping Terapi)',
+    iconName: 'Shield',
+    badge: 'TERAPI SUPORTIF & UJI LABORATORIUM',
+    headline: 'Dukungan Nutrisi Alami Berdasarkan Uji Laboratorium dan Terapi Pendamping',
+    subheadline: 'Sifat antiproliferatif PUFA nabati dan peran probiotik dalam meredakan efek samping kemoterapi & radioterapi.',
+    warningText: 'Uji klinis menunjukkan terapi suportif nutrisi dan mikrobioma usus yang seimbang sangat membantu stamina selama terapi medis.',
+    symptomsList: [
+      'Menjalani kemoterapi atau radioterapi yang memicu mual, lemas, dan penurunan selera makan',
+      'Gangguan pencernaan, mukositis (radang usus), dan diare akibat efek pengobatan',
+      'Daya tahan tubuh sangat rentan terhadap infeksi bakteri dan virus oportunistik',
+      'Membutuhkan perlindungan antioksidan tinggi melawan kerusakan radikal bebas DNA'
+    ],
+    mechanismTitle: 'Bagaimana HI-OMEGA Mendukung Terapi Kanker?',
+    mechanismSteps: [
+      { title: 'Aktivitas Antiproliferatif PUFA', desc: 'Uji in vitro laboratorium membuktikan PUFA sacha inchi merusak membran sel abnormal dan memicu apoptosis.' },
+      { title: 'Senyawa Fenolik & Flavonoid', desc: 'Antioksidan kuat yang menetralkan radikal bebas pemicu mutasi DNA sel sehat.' },
+      { title: 'Meredakan Efek Kemoterapi', desc: 'Probiotik membantu meredakan mual, diare, dan peradangan mukosa usus pasca-kemoterapi.' },
+      { title: 'Mendukung Respon Imunoterapi', desc: 'Keseimbangan mikrobiota usus meningkatkan daya tahan tubuh melawan infeksi sekunder.' }
+    ],
+    highlightQuote: '“Uji in vitro membuktikan ekstrak Sacha Inchi memiliki aktivitas antiproliferatif dan memicu apoptosis sel abnormal.”',
+    accentColor: 'from-rose-700 to-red-900'
+  },
+  degeneratif: {
+    id: 'degeneratif',
+    name: 'Penyakit Degeneratif & Penuaan Organ',
+    iconName: 'Layers',
+    badge: 'PERISAI PENUAAN DINI SEL & ORGAN',
+    headline: 'Cegah dan Kendalikan Kerusakan Sel Akibat Penyakit Degeneratif',
+    subheadline: 'Nutrisi asam lemak tak jenuh ganda (PUFA), kalium, dan tokoferol melawan stres oksidatif perusak organ vital seiring bertambahnya usia.',
+    warningText: 'Penyakit degeneratif bermula dari peradangan kronis menahun yang merusak organ vital bila tidak diproteksi sejak dini.',
+    symptomsList: [
+      'Fungsi organ vital (jantung, pembuluh darah, pankreas, ginjal) mulai menurun',
+      'Persendian sering kaku, linu menahun (osteoarthritis) saat bergerak',
+      'Daya ingat dan konsentrasi sering menurun (gejala demensia / pikun)',
+      'Gula darah, tensi, dan kolesterol sering tidak stabil bersamaan'
+    ],
+    mechanismTitle: 'Cara Kerja HI-OMEGA Menangani Kondisi Degeneratif',
+    mechanismSteps: [
+      { title: 'Perbaikan Integritas Membran Sel', desc: 'Omega-3 nabati menjaga keutuhan membran sel di seluruh sistem organ tubuh.' },
+      { title: 'Kalium & Kelancaran Vaskular', desc: 'Meningkatkan sirkulasi darah dan menurunkan tekanan darah tinggi secara alami.' },
+      { title: 'Produksi SCFA Pelindung Saraf', desc: 'Probiotik usus memproduksi asam lemak rantai pendek yang melindungi sawar otak (blood-brain barrier).' },
+      { title: 'Peredam Inflamasi Kronis', desc: 'Menekan proses peradangan mikro menahun yang memicu penuaan organ dini.' }
+    ],
+    highlightQuote: '“Badan yang biasanya sering pegal linu dan cepat letih di usia 50-an sekarang terasa bertenaga dan segar kembali.”',
+    accentColor: 'from-indigo-700 to-slate-900'
+  },
+  kulit_penuaan: {
+    id: 'kulit_penuaan',
+    name: 'Kesehatan Kulit & Anti Penuaan Dini',
+    iconName: 'Sparkles',
+    badge: 'DERMATOLOGI & SKIN BARRIER',
+    headline: 'Kulit Kencang, Lembap Mendalam & Bebas Kerutan (Bisa Diminum & Dioleskan)',
+    subheadline: 'Kaya Omega 3-6-9, Vitamin E, Vitamin A, dan Probiotik. Dapat diminum harian atau dioleskan langsung pada kulit dan rambut.',
+    warningText: 'Sinar UV dan radikal bebas merusak kolagen kulit setiap hari. Perkuat skin barrier dari dalam dan luar.',
+    symptomsList: [
+      'Garis-garis halus, kerutan di wajah, dan bintik-bintik hitam (age spots) mulai muncul',
+      'Kulit terasa kering, bersisik, sensitif, mudah memerah, atau eksim kambuhan',
+      'Rambut rontok, kusam, kering bercabang, dan kulit kepala berminyak tidak seimbang',
+      'Lapisan pelindung kulit (skin barrier) melemah akibat polusi dan penuaan dini'
+    ],
+    mechanismTitle: 'Keajaiban HI-OMEGA untuk Kulit & Rambut',
+    mechanismSteps: [
+      { title: 'Memperkuat Skin Barrier', desc: 'Asam lemak esensial menghidrasi kulit secara mendalam tanpa menyumbat pori-pori (non-comedogenic).' },
+      { title: 'Menyamarkan Garis Halus & Kerutan', desc: 'Antioksidan tokoferol dan vitamin A merangsang regenerasi sel dan produksi kolagen alami.' },
+      { title: 'Perawatan Kulit Kepala & Rambut', desc: 'Mengatur produksi sebum, menyehatkan folikel rambut, dan mengatasi rambut kusam bercabang.' },
+      { title: 'Keseimbangan pH & Mikrobioma Kulit', desc: 'Probiotik mengembalikan keasaman alami kulit untuk menangkal bakteri jerawat.' }
+    ],
+    highlightQuote: '“Selain diminum, saya gunting kapsulnya untuk serum wajah malam hari. Kulit bangun pagi kenyal dan flek hitam memudar!”',
+    accentColor: 'from-pink-600 to-rose-800'
+  },
   semua: {
     id: 'semua',
     name: 'Semua Khasiat (Superfood Lengkap)',
     iconName: 'Sparkles',
     badge: 'SUPERFOOD KELUARGA LENGKAP',
-    headline: 'HI-OMEGA Sacha Inchi + VCO: Kebaikan Alam untuk Seluruh Keluarga',
-    subheadline: 'Kombinasi nutrisi nabati terlengkap di dunia: Omega 3, 6, 9, Protein, Vitamin E & Asam Laurat dalam satu kapsul.',
-    warningText: 'Jangan tunggu sakit parah! Mencegah dan menutrisi sejak dini jauh lebih murah daripada biaya rumah sakit.',
+    headline: 'Kombinasi Keajaiban Alam Sumber Nabati Terbaik di Dunia: Omega 3, 6, 9 + Probiotik, EPA DHA & Asam Amino Esensial Disetiap Kapsul',
+    subheadline: 'Kombinasi nutrisi nabati terlengkap di dunia: Omega 3, 6, 9, Probiotik, EPA DHA, VCO & Asam Amino Esensial dalam satu kapsul.',
+    warningText: 'Jangan Tunggu Sakit Semakin Parah Merawat Dan Mencegah Sejak Dini Jauh Lebih Murah Daripada Biaya Rumah Sakit',
     symptomsList: [
-      'Badan sering lemas, mengantuk, dan stamina cepat loyo',
-      'Ingin menjaga agar tensi, kolesterol, dan gula darah selalu normal',
-      'Kulit kusam, kering, dan ingin mempertahankan keremajaan kulit',
-      'Mencari suplemen harian yang aman dikonsumsi jangka panjang',
-      'Membutuhkan nutrisi pelindung sendi, jantung, dan otak sekaligus'
+      'Sering Kesemutan, Sakit Kepala, Pundak Terasa berat, Mudah Marah',
+      'Wajah Tampak Kusam, Kulit Keriput dan Penuaan Dini',
+      'Sering Sakit Pada Tulang Dan Persendian, Linu-Linu Dan Asam Urat',
+      'Mudah Cemas, Jantung Berdebar, Sering Keringat Dingin Dan Mudah Lupa'
     ],
     mechanismTitle: 'Kandungan Utama HI-OMEGA',
     mechanismSteps: [
-      { title: 'Omega-3 (Asam Alfa-Linolenat)', desc: '17x lipat lebih tinggi dari minyak salmon liar, menjaga pembuluh darah & otak.' },
+      { title: 'Omega-3', desc: '17x lipat lebih tinggi dari minyak ikan salmon, menjada pembuluh darah & otak.' },
+      { title: 'EPA & DHA', desc: 'Menjaga Kesehatan Jantung, MengOptimalkan Fungsi Otak, Serta Mengurangi Peradangan Dalam Tubuh, Juga Meringankan Depresi Dan Stress' },
       { title: 'Omega-6 & Omega-9 Seimbang', desc: 'Rasio alami ideal untuk menyeimbangkan metabolisme lemak dan metabolisme gula.' },
-      { title: 'Virgin Coconut Oil (VCO)', desc: 'Asam laurat antibakteri memperkuat imunitas dan melumasi persendian.' },
-      { title: 'Tinggi Antioksidan Vitamin E', desc: 'Melindungi sel tubuh dari penuaan dini dan polusi radikal bebas.' }
+      { title: 'Probiotik Berupa VCO', desc: 'Menyeimbangkan Bakteri Di Saluran Pencernaan dan Meningkatkan Sel Kekebalan Tubuh Untuk Melawan Penyakit' },
+      { title: 'Tinggi Antioksidan', desc: 'Melindungi dan Meregenerasi Sel Tubuh Dari Penuaan Dini dan Radikal Bebas.' }
     ],
-    highlightQuote: '“HI-OMEGA sudah jadi suplemen wajib keluarga kami setiap pagi. Sehat, bugar, dan penuh energi!”',
+    highlightQuote: '“Tubuh Manusia Tidak Dapat Memproduksi OMEGA-3, Sehingga Harus Di Dapatkan Dari Makanan / Suplemen Seperti Hi-OMEGA”',
     accentColor: 'from-emerald-600 to-teal-800'
   }
 };
@@ -372,6 +529,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-001',
     username: 'ahmadherbal',
+    password: 'ahmad123',
     fullName: 'H. Ahmad Supriyadi',
     whatsapp: '081234567890',
     email: 'ahmad.herbal@gmail.com',
@@ -389,6 +547,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-002',
     username: 'siti_omega',
+    password: 'siti123',
     fullName: 'Hj. Siti Rahayu, S.Farm',
     whatsapp: '085712345678',
     email: 'sitirahayu@yahoo.com',
@@ -406,6 +565,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-003',
     username: 'budi_sehat',
+    password: 'budi123',
     fullName: 'Budi Hartono',
     whatsapp: '082198765432',
     email: 'budihartono.sehat@gmail.com',
@@ -423,6 +583,7 @@ export const INITIAL_MEMBERS: Member[] = [
   {
     id: 'mem-004',
     username: 'dewikartika',
+    password: 'dewi123',
     fullName: 'Dewi Kartika',
     whatsapp: '081399887766',
     email: 'dewikartika.shop@gmail.com',

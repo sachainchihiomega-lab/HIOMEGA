@@ -22,6 +22,7 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
   const [fullName, setFullName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [whatsapp, setWhatsapp] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [bankName, setBankName] = useState<string>('BCA');
   const [bankAccountNumber, setBankAccountNumber] = useState<string>('');
@@ -42,6 +43,11 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
       return;
     }
 
+    if (!password.trim()) {
+      setErrorMsg('Password akun member wajib diisi.');
+      return;
+    }
+
     const currentMembers = getStoredMembers();
     if (currentMembers.some((m) => m.username.toLowerCase() === cleanUsername)) {
       setErrorMsg('Username ini sudah dipakai oleh member lain. Silakan pilih username unik lainnya.');
@@ -51,6 +57,7 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
     const newMember: Member = {
       id: `mem-${Date.now().toString().slice(-4)}`,
       username: cleanUsername,
+      password: password.trim(),
       fullName: fullName.trim(),
       whatsapp: whatsapp.trim(),
       email: email.trim(),
@@ -94,9 +101,9 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
             <UserCheck className="w-6 h-6 text-emerald-300" />
             <div>
               <span className="text-xs uppercase tracking-wider text-emerald-300 font-extrabold block">
-                Program Kemitraan Resmi
+                Program Kemitraan Reseller Resmi
               </span>
-              <h3 className="text-xl font-black">Pendaftaran Member & Affiliate HI-OMEGA</h3>
+              <h3 className="text-xl font-black">Pendaftaran Reseller & Member Resmi HI-OMEGA</h3>
             </div>
           </div>
           <button
@@ -211,10 +218,10 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm sm:text-base font-black text-slate-900 mb-1.5">
-                  Nomor WhatsApp Aktif: *
+                  Nomor WhatsApp: *
                 </label>
                 <input
                   type="tel"
@@ -222,7 +229,21 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
                   placeholder="081234567890"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl px-4 py-3 text-base sm:text-lg font-bold text-slate-900"
+                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl px-4 py-3 text-sm sm:text-base font-bold text-slate-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm sm:text-base font-black text-slate-900 mb-1.5">
+                  Password Akses: *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Buat password login"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl px-4 py-3 text-sm sm:text-base font-bold text-slate-900"
                 />
               </div>
 
@@ -235,7 +256,7 @@ export const MemberRegistrationModal: React.FC<MemberRegistrationModalProps> = (
                   placeholder="siti@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl px-4 py-3 text-base sm:text-lg font-bold text-slate-900"
+                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl px-4 py-3 text-sm sm:text-base font-bold text-slate-900"
                 />
               </div>
             </div>

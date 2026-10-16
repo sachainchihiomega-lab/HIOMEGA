@@ -46,11 +46,11 @@ interface ComparisonRow {
 
 const COMPARISON_DATA: ComparisonRow[] = [
   {
-    factor: 'Kadar Asam Lemak Omega-3',
-    factorDesc: 'Nutrisi kunci untuk melarutkan plak kolesterol & perlindungan jantung',
+    factor: 'Sacha Inchi Oil Mengandung Asam Lemak Berjenis Tak Jenuh Ganda (DHL/Lemak Sehat).',
+    factorDesc: 'Formula Kunci Untuk Meluruhkan Lemak Jahat, Meyeimbangkan Kadar Kolesterol Dan Melindungi Sistem Peredaran Darah Jantung.',
     hiOmega: {
       highlight: 'Sangat Tinggi (~48%)',
-      sub: 'Hingga 17x lipat lebih tinggi dari minyak ikan per takaran nabati',
+      sub: 'Hingga 17x lipat lebih tinggi dari minyak ikan salmon dengan takaran yang sama',
       status: 'best'
     },
     fishOil: {
@@ -71,7 +71,7 @@ const COMPARISON_DATA: ComparisonRow[] = [
   },
   {
     factor: 'Keseimbangan Omega 3-6-9',
-    factorDesc: 'Sinergi asam lemak esensial untuk kesehatan sel & sirkulasi darah',
+    factorDesc: 'Berdasarkan Penelitian Keseimbangan Asam Lemak OMEGA-3,6,9 di Sacha Inchi Oil Sangat Tinggi Dengan Rasio Sangat Seimbang Dan Ideal Bagi Kesehatan Tubuh Manusia.',
     hiOmega: {
       highlight: 'Lengkap & Seimbang',
       sub: 'Kombinasi Omega 3 (48%), Omega 6 (36%), Omega 9 (9%)',
@@ -94,11 +94,11 @@ const COMPARISON_DATA: ComparisonRow[] = [
     }
   },
   {
-    factor: 'Aroma & Kenyamanan Lambung (Bebas Amis)',
-    factorDesc: 'Kenyamanan saat ditelan, terutama bagi usia 40 tahun ke atas',
+    factor: 'Sumber Nabati Mudah Di Cerna Cocok Bagi Vegan Dan Aman Bagi Lambung.',
+    factorDesc: 'Sangat Sesuai Bagi Semua Usia Dari Anak Hingga Lansia .',
     hiOmega: {
       highlight: '100% Bebas Bau Amis',
-      sub: 'Wangi gurih nabati kacang bintang & kelapa lembut, tidak bikin enek',
+      sub: 'Nyaman di Konsumsi Jangka Panjang Tidak Amis Dan Tidak Bikin Enek.',
       status: 'best'
     },
     fishOil: {
@@ -122,7 +122,7 @@ const COMPARISON_DATA: ComparisonRow[] = [
     factorDesc: 'Keamanan jangka panjang bagi organ ginjal dan hati',
     hiOmega: {
       highlight: '0% Merkuri (Bebas Toksin Laut)',
-      sub: 'Hasil perkebunan darat organik terkontrol, aman dikonsumsi harian',
+      sub: 'Hasil Pertanian Organik Bebas Cemaran Kimia Dan Aman Di Konsumsi Harian.',
       status: 'best'
     },
     fishOil: {
@@ -142,26 +142,26 @@ const COMPARISON_DATA: ComparisonRow[] = [
     }
   },
   {
-    factor: 'Kombinasi Minyak Kelapa Murni (VCO)',
-    factorDesc: 'Mengandung Asam Laurat untuk antibakteri & mempercepat penyerapan',
+    factor: 'Mengandung EPA+DHA.',
+    factorDesc: 'Peran EPA & DHA Sangat Di Butuhkan Dalam Menjaga Fungsi Organ Vital Tubuh Manusia.',
     hiOmega: {
-      highlight: 'Ada (Formula Eksklusif)',
-      sub: 'Sinergi Sacha Inchi + VCO melipatgandakan khasiat daya tahan tubuh',
+      highlight: 'Ada EPA + DHA.',
+      sub: 'Formula Ekslusif Untuk Mengatasi Berbagai Gangguan Kesehatan Pada Tubuh.',
       status: 'best'
     },
     fishOil: {
       highlight: 'Tidak Ada',
-      sub: 'Hanya minyak ikan tunggal murni',
+      sub: 'Tidak Memiliki Kandungan EPA+DHA Dan Probiotik.',
       status: 'poor'
     },
     oliveOil: {
       highlight: 'Tidak Ada',
-      sub: 'Hanya minyak zaitun tunggal',
+      sub: 'Tidak Memiliki Kandungan EPA+DHA Dan Probiotik.',
       status: 'poor'
     },
     chiaSeed: {
       highlight: 'Tidak Ada',
-      sub: 'Tanpa minyak kelapa murni (VCO)',
+      sub: 'Tidak Memiliki Kandungan EPA+DHA Dan Probiotik.',
       status: 'poor'
     }
   },
@@ -190,10 +190,10 @@ const COMPARISON_DATA: ComparisonRow[] = [
     }
   },
   {
-    factor: 'Keamanan Konsumsi Lansia & Asam Lambung',
-    factorDesc: 'Kemudahan diserap tubuh tanpa memicu gas lambung berlebih',
+    factor: 'Tidak Memicu Asam Lambung Dan Aman Bagi Penderita Diabetes.',
+    factorDesc: 'Mudah Di Cerna Dan Di Serap Oleh Tubuh Tanpa Resiko Gas Lambung Dan Gula.',
     hiOmega: {
-      highlight: 'Sangat Aman & Ramah Lambung',
+      highlight: 'Ramah Bagi Lambung Dan Penderita Diabetes',
       sub: 'Kapsul softgel mudah larut, tanpa asam lambung naik, 100% vegetarian',
       status: 'best'
     },
@@ -222,13 +222,16 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
           <div className="text-xs sm:text-sm font-bold uppercase tracking-widest text-emerald-800 mb-2">
-            Perbandingan Sumber Nutrisi & Superfood
+            PERBANDINGAN KANDUNGAN SACHA INCHI DENGAN YANG LAIN.
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight">
             Mengapa Memilih HI-OMEGA?
           </h2>
-          <p className="text-slate-600 text-lg sm:text-xl font-bold mt-3 leading-relaxed">
-            Bandingkan fakta ilmiah keunggulan Sacha Inchi + VCO dibandingkan sumber Omega-3 dan minyak sehat lainnya. Pilihan terbaik untuk perlindungan kesehatan harian Anda:
+          <p className="text-emerald-800 text-lg sm:text-xl font-black mt-2">
+            Sacha Inchi di Nobatkan Sebagai SUPERFOOD Oleh Badan Pangan Dunia Atau Food & Agriculture Organization (FAO) Karena Kandungan Nutrisi nya Yang Sangat Tinggi.
+          </p>
+          <p className="text-slate-600 text-base sm:text-lg font-bold mt-2 leading-relaxed">
+            Tubuh Manusia Tidak Dapat Memproduksi OMEGA-3, Sehingga Harus Di Dapatkan Dari Makanan / Suplemen Seperti Hi-OMEGA. Sacha Inchi Oil Memiliki Kandungan OMEGA-3  Hingga 48% Yang Di Butuhkan Tubuh Dan Harus Di Penuhi Setiap Harinya Agar Kesehatan Tetap Terjaga.
           </p>
         </div>
 
@@ -242,7 +245,7 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
               Omega-3 Lebih Tinggi
             </h3>
             <p className="text-sm font-semibold text-slate-700 leading-relaxed">
-              Kandungan asam lemak Omega-3 Sacha Inchi mencapai ~48%, jauh melampaui ikan salmon dan biji-bijian lainnya.
+              Kandungan OMEGA-3 Pada Sacha Inchi Jauh Melampaui Minyak Ikan Salmon Dan Minyak biji-bijian Lainnya.
             </p>
           </div>
 
@@ -251,10 +254,10 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
               <ShieldCheck className="w-7 h-7 text-emerald-100" />
             </div>
             <h3 className="text-xl font-black text-slate-900 mb-1.5 leading-snug">
-              100% Bebas Merkuri & Bau Amis
+              Bebas Merkuri & Bau Amis
             </h3>
             <p className="text-sm font-semibold text-slate-700 leading-relaxed">
-              Ditanam secara alami di perkebunan darat organik. Bebas mikroplastik dan polutan laut, nyaman ditelan tanpa rasa mual.
+              Di Tanam Secara Organik Bebas Kimia Mikroplastik Dan Polutan Laut , Nyaman Tanpa Rasa Mual.
             </p>
           </div>
 
@@ -263,10 +266,10 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
               <Sparkles className="w-7 h-7 text-emerald-100" />
             </div>
             <h3 className="text-xl font-black text-slate-900 mb-1.5 leading-snug">
-              Sinergi Sacha Inchi + VCO
+              Kandungan EPA + DHA Dan Probiotik
             </h3>
             <p className="text-sm font-semibold text-slate-700 leading-relaxed">
-              Formula ganda pertama di Indonesia yang memadukan asam lemak Omega 3-6-9 dengan Asam Laurat Virgin Coconut Oil.
+              Formula Sempurna Pertama Di indonesia Dengan Rasio Yang Sangat Seimbang Untuk Regenerasi Sel Tubuh.
             </p>
           </div>
         </div>
@@ -281,7 +284,7 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
                 </th>
                 <th className="py-5 px-6 font-black text-lg bg-emerald-700 text-white w-1/3 relative shadow-inner">
                   <div className="flex items-center justify-between">
-                    <span>HI-OMEGA (Sacha Inchi + VCO)</span>
+                    <span>HI-OMEGA Paduan Sacha Inchi Oil + Probiotik.</span>
                     <span className="text-xs bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-lg shadow-sm">
                       REKOMENDASI
                     </span>
@@ -416,9 +419,6 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
               className="bg-white rounded-3xl p-5 border-2 border-slate-200 shadow-md space-y-4"
             >
               <div>
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
-                  Kriteria #{idx + 1}
-                </span>
                 <h4 className="text-lg font-black text-slate-900 leading-snug">
                   {row.factor}
                 </h4>
@@ -431,7 +431,7 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
               <div className="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <span className="text-xs font-black text-emerald-950 uppercase tracking-wide">
-                    HI-OMEGA (Sacha Inchi + VCO)
+                    HI-OMEGA Paduan Sacha Inchi Oil + Probiotik.
                   </span>
                   <span className="text-[10px] bg-emerald-700 text-white font-black px-2 py-0.5 rounded">
                     TERBAIK
@@ -495,23 +495,23 @@ export const WhyChooseSection: React.FC<WhyChooseSectionProps> = ({ onScrollToPr
         <div className="bg-gradient-to-r from-emerald-800 to-teal-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2 text-center md:text-left">
             <span className="text-xs font-black uppercase tracking-wider text-emerald-300">
-              SOLUSI SUPERFOOD TERBAIK UNTUK KESEHATAN KELUARGA
+              BUKTIKAN SEKARANG JUGA.
             </span>
             <h3 className="text-2xl sm:text-3xl font-black leading-snug">
-              Beralih ke HI-OMEGA Sacha Inchi + VCO Hari Ini
+              HI-OMEGA Kapsul Sacha Inchi + EPA & DHA.
             </h3>
             <p className="text-sm sm:text-base text-emerald-100 font-medium max-w-xl">
-              Dapatkan manfaat Omega 3-6-9 konsentrasi tinggi tanpa bau amis, bebas merkuri, dan aman untuk lambung serta ginjal usia 40 tahun ke atas.
+              Sanggup Membantu Berbagai Keluhan Kesehatan Yang Cocok Bagi Anda Dan Orang-Orang Tercinta.
             </p>
           </div>
 
           <button
             onClick={onScrollToProducts}
-            className="w-full md:w-auto flex-shrink-0 inline-flex items-center justify-center gap-3 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-8 py-4 sm:py-5 rounded-2xl text-lg sm:text-xl shadow-lg transition cursor-pointer"
+            className="w-full md:w-auto flex-shrink-0 inline-flex items-center justify-center gap-2 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-bold px-5 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base shadow-md transition cursor-pointer"
           >
-            <ShoppingBag className="w-6 h-6 text-slate-900" />
+            <ShoppingBag className="w-5 h-5 text-slate-900" />
             <span>Pesan HI-OMEGA Sekarang</span>
-            <ArrowRight className="w-5 h-5 text-slate-900" />
+            <ArrowRight className="w-4 h-4 text-slate-900" />
           </button>
         </div>
       </div>

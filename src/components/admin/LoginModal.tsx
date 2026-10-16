@@ -25,18 +25,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [password, setPassword] = useState<string>('');
   const [errorMsg, setErrorMsg] = useState<string>('');
 
-  const handleQuickFill = (role: 'superadmin' | 'admin') => {
-    if (role === 'superadmin') {
-      setUsername('SUPERADMIN');
-      setPassword('BISMILLAHSUKSES100M');
-      setLoginRole('superadmin');
-    } else {
-      setUsername('ADMIN1');
-      setPassword('AKUADMINHEBAT1');
-      setLoginRole('admin');
-    }
-    setErrorMsg('');
-  };
+
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,27 +72,32 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       const match = members.find(
         (m) => m.username.toLowerCase() === username.trim().toLowerCase() || m.whatsapp === username.trim()
       );
-      if (match) {
-        if (match.status === 'suspended') {
-          setErrorMsg('Akun member ini sedang ditangguhkan. Silakan hubungi admin pusat.');
-          return;
-        }
-        const session: CurrentUserSession = {
-          role: 'MEMBER',
-          username: match.username,
-          fullName: match.fullName,
-          memberId: match.id,
-          memberSlug: match.customSlug,
-          whatsapp: match.whatsapp
-        };
-        saveCurrentUser(session);
-        onLoginSuccess(session);
-        onClose();
-        return;
-      } else {
+      if (!match) {
         setErrorMsg('Username member atau nomor WhatsApp tidak ditemukan dalam database.');
         return;
       }
+      if (match.status === 'suspended') {
+        setErrorMsg('Akun member ini sedang ditangguhkan. Silakan hubungi admin pusat.');
+        return;
+      }
+      const memberPass = match.password || 'member123';
+      if (cleanPass !== memberPass) {
+        setErrorMsg('Password akun member salah. Silakan periksa kembali atau hubungi admin.');
+        return;
+      }
+
+      const session: CurrentUserSession = {
+        role: 'MEMBER',
+        username: match.username,
+        fullName: match.fullName,
+        memberId: match.id,
+        memberSlug: match.customSlug,
+        whatsapp: match.whatsapp
+      };
+      saveCurrentUser(session);
+      onLoginSuccess(session);
+      onClose();
+      return;
     }
   };
 
@@ -163,38 +157,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             </div>
           )}
 
-          {/* Quick-fill button helper */}
-          {loginRole === 'superadmin' && (
-            <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs flex items-center justify-between">
-              <div>
-                <span className="font-extrabold text-emerald-900 block">Kredensial Superadmin:</span>
-                <span className="text-slate-600 font-mono">SUPERADMIN / BISMILLAHSUKSES100M</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleQuickFill('superadmin')}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-xl text-[11px] shadow-xs"
-              >
-                Isi Otomatis
-              </button>
-            </div>
-          )}
 
-          {loginRole === 'admin' && (
-            <div className="p-3 bg-teal-50 rounded-2xl border border-teal-200 text-xs flex items-center justify-between">
-              <div>
-                <span className="font-extrabold text-teal-900 block">Kredensial Admin1:</span>
-                <span className="text-slate-600 font-mono">ADMIN1 / AKUADMINHEBAT1</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => handleQuickFill('admin')}
-                className="bg-teal-600 hover:bg-teal-700 text-white font-extrabold px-3 py-1.5 rounded-xl text-[11px] shadow-xs"
-              >
-                Isi Otomatis
-              </button>
-            </div>
-          )}
 
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -213,24 +176,22 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             </div>
           </div>
 
-          {loginRole !== 'member' && (
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Password:
-              </label>
-              <div className="relative">
-                <KeyRound className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="password"
-                  required
-                  placeholder="Masukkan password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl pl-10 pr-4 py-2.5 text-sm font-semibold text-slate-900 focus:outline-none"
-                />
-              </div>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">
+              {loginRole === 'member' ? 'Password Member (Wajib):' : 'Password:'}
+            </label>
+            <div className="relative">
+              <KeyRound className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="password"
+                required
+                placeholder={loginRole === 'member' ? 'Masukkan password member Anda' : 'Masukkan password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-slate-50 border-2 border-slate-300 focus:border-emerald-600 rounded-xl pl-10 pr-4 py-2.5 text-sm font-semibold text-slate-900 focus:outline-none"
+              />
             </div>
-          )}
+          </div>
 
           <button
             type="submit"

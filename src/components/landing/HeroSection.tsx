@@ -8,14 +8,10 @@ import {
   HAPPY_SENIORS_IMAGE
 } from '../../data/initialData';
 import { 
-  ShieldCheck, 
   CheckCircle, 
   Sparkles, 
-  Award, 
   Leaf, 
-  ShoppingBag, 
-  MapPin,
-  ExternalLink
+  ShoppingBag
 } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -41,18 +37,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     },
     {
       img: GOLDEN_SOFTGELS_IMAGE,
-      label: 'Softgel Emas Bebas Amis',
-      desc: 'Minyak Nabati Murni'
+      label: 'Softgel Anti Bocor',
+      desc: 'Bisa di campurkan ke Makanan/Minuman'
     },
     {
       img: SHIPPING_PARCEL_IMAGE,
       label: 'Packing Ekstra Tebal & Aman',
-      desc: 'Bisa Bayar di Tempat (COD)'
+      desc: 'Pengiriman Cepat & Bergaransi'
     },
     {
       img: HAPPY_SENIORS_IMAGE,
-      label: 'Bugar Tanpa Nyeri Sendi',
-      desc: 'Aman untuk Usia 40+'
+      label: 'Cocok untuk Semua Usia',
+      desc: 'Dari Anak Hingga Lansia'
     }
   ];
 
@@ -67,105 +63,57 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Left Column: Extra Large, High-Contrast Typography for Seniors & Adults */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-6">
             <div className="inline-flex items-center gap-2 bg-emerald-800 text-white px-4 py-2 rounded-full text-sm sm:text-base font-black tracking-wide uppercase shadow-sm">
-              <Leaf className="w-5 h-5 text-emerald-300" />
-              <span>{symptomInfo.badge}</span>
+              <Leaf className="w-5 h-5 text-emerald-300 flex-shrink-0" />
+              <span>RESMI BPOM : POM TR253094921 DAN BERSERTIFIKAT HALAL</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.12] tracking-tight">
-              {symptomInfo.headline}
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 leading-tight tracking-tight">
+              KAPSUL HI-OMEGA SACHA INCHI OIL
             </h1>
 
-            <p className="text-2xl sm:text-3xl text-slate-800 leading-snug font-extrabold">
-              {symptomInfo.subheadline}
+            <p className="text-xl sm:text-2xl lg:text-3xl text-slate-800 leading-snug font-extrabold">
+              KEAJAIBAN ALAM SUMBER NABATI DENGAN KOMBINASI TERBAIK DI DUNIA OMEGA 3,6,9 + PROBIOTIK, EPA DHA & ASAM AMINO ESENSIAL DI SETIAP KAPSUL
             </p>
 
             {/* Quick 3-Point Checklist with Extra Large Icons & High Contrast Text */}
             <div className="bg-white p-5 sm:p-7 rounded-3xl border-3 border-emerald-400 shadow-md space-y-3.5 text-left">
-              <div className="flex items-center gap-3.5">
-                <CheckCircle className="w-8 h-8 text-emerald-600 flex-shrink-0" />
+              <div className="flex items-start gap-3.5">
+                <CheckCircle className="w-8 h-8 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <span className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
-                  100% Ekstrak Sacha Inchi + Minyak Kelapa Murni (VCO)
+                  Formula Alami Tanpa Efek Samping
                 </span>
               </div>
               <div className="flex items-center gap-3.5">
                 <CheckCircle className="w-8 h-8 text-emerald-600 flex-shrink-0" />
                 <span className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
-                  Bebas Bau Amis Ikan & Bebas Cemaran Merkuri Laut
+                  Bebas Bahan Kimia dan Tidak Amis
                 </span>
               </div>
               <div className="flex items-center gap-3.5">
                 <CheckCircle className="w-8 h-8 text-emerald-600 flex-shrink-0" />
                 <span className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
-                  Izin Resmi BPOM RI & Sertifikasi Halal Indonesia
+                  Izin Resmi BPOM RI & Sertifikasi Halal
                 </span>
               </div>
             </div>
 
-            {/* Big Direct Action Button - Focused on Website Purchase Form */}
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            {/* Direct Action Button - Scaled down to clean, compact size */}
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5">
               <button
                 onClick={onScrollToProducts}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-black px-10 py-5 sm:py-6 rounded-2xl text-2xl sm:text-3xl shadow-xl hover:shadow-2xl transition-all border-3 border-emerald-500 group cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-black px-6 py-3.5 sm:py-4 rounded-xl text-lg sm:text-xl shadow-lg hover:shadow-xl transition-all border-2 border-emerald-500 group cursor-pointer"
               >
-                <ShoppingBag className="w-8 h-8 text-emerald-200 group-hover:scale-110 transition-transform flex-shrink-0" />
-                <span>Pesan HI-OMEGA Sekarang</span>
+                <ShoppingBag className="w-6 h-6 text-emerald-200 group-hover:scale-110 transition-transform flex-shrink-0" />
+                <span>Pesan HI-OMEGA</span>
               </button>
 
               <a
                 href="#produk"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-emerald-950 font-black px-8 py-5 sm:py-6 rounded-2xl text-xl sm:text-2xl border-3 border-emerald-600 shadow-md transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-emerald-950 font-black px-5 py-3.5 sm:py-4 rounded-xl text-base sm:text-lg border-2 border-emerald-600 shadow-sm transition"
               >
-                <Sparkles className="w-6 h-6 text-emerald-700" />
+                <Sparkles className="w-5 h-5 text-emerald-700" />
                 <span>Lihat Pilihan Paket</span>
               </a>
-            </div>
-
-            {/* Marketplace Direct Order Shortcuts: Shopee & TikTok Shop */}
-            <div className="p-4 bg-slate-50 border-2 border-slate-200 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
-              <span className="text-base font-black text-slate-800 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-amber-500" />
-                <span>Bisa Pesan Lewat Marketplace Resmi:</span>
-              </span>
-
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                <a
-                  href="https://s.shopee.co.id/W70hOBonR"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-[#EE4D2D] hover:bg-[#d73f1f] text-white font-black px-5 py-3 rounded-2xl text-base shadow-md hover:shadow-lg transition active:scale-95"
-                >
-                  <span className="w-5 h-5 bg-white text-[#EE4D2D] rounded-full flex items-center justify-center font-black text-xs">S</span>
-                  <span>Beli di Shopee</span>
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-
-                <a
-                  href="https://vt.tokopedia.com/t/ZS9ATgaYMYp59-bQN3l/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-black hover:bg-slate-900 text-white font-black px-5 py-3 rounded-2xl text-base shadow-md hover:shadow-lg transition border border-slate-700 active:scale-95"
-                >
-                  <span className="w-5 h-5 bg-cyan-400 text-black rounded-full flex items-center justify-center font-black text-xs">T</span>
-                  <span>Beli di TikTok Shop</span>
-                  <ExternalLink className="w-4 h-4 text-cyan-300" />
-                </a>
-              </div>
-            </div>
-
-            {/* Official trust badges */}
-            <div className="pt-1 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-base sm:text-lg font-black text-slate-800">
-              <span className="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-2xl border border-slate-300 shadow-sm">
-                <ShieldCheck className="w-6 h-6 text-emerald-600" /> Jamu Tradisional BPOM
-              </span>
-              <span className="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-2xl border border-slate-300 shadow-sm">
-                <Award className="w-6 h-6 text-emerald-600" /> Uji Lab Terakreditasi
-              </span>
-              <span className="inline-flex items-center gap-2 bg-slate-100 px-4 py-2 rounded-2xl border border-slate-300 shadow-sm">
-                <Sparkles className="w-6 h-6 text-emerald-600" /> Halal Indonesia
-              </span>
-              <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-950 px-4 py-2 rounded-2xl border border-emerald-400 shadow-sm">
-                <MapPin className="w-6 h-6 text-emerald-700" /> Kirim Seluruh Indonesia (COD)
-              </span>
             </div>
           </div>
 
@@ -188,15 +136,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                 <div className="mt-4">
                   <h3 className="text-2xl sm:text-3xl font-black text-slate-900 leading-snug">
-                    HI-OMEGA Sacha Inchi + VCO
+                    ISI 60 KAPSUL @500MG HIGIENIS DAN ANTI BOCOR
                   </h3>
-                  <p className="text-base sm:text-lg text-slate-700 font-extrabold mt-1">
-                    Isi 60 Kapsul Minyak Murni @500mg • Bersih & Alami
-                  </p>
                   
                   {/* Price Tag with Extra Large High Contrast Typography */}
                   <div className="mt-3.5 inline-block bg-emerald-50 px-7 py-3 rounded-2xl border-2 border-emerald-400 shadow-sm">
-                    <span className="text-sm sm:text-base text-slate-700 font-black block">Harga Resmi Website:</span>
+                    <span className="text-sm sm:text-base text-slate-700 font-black block">
+                      HARGA NORMAL <span className="line-through text-rose-600 font-extrabold">RP.150.000</span> (PROMO TERBATAS)
+                    </span>
                     <span className="text-4xl sm:text-5xl font-black text-emerald-950">
                       Rp 100.000
                     </span>
@@ -207,7 +154,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {/* Multi-Photo Preview Gallery Thumbnails */}
                 <div className="mt-5 pt-4 border-t-2 border-slate-200">
                   <div className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-600 mb-2.5">
-                    Foto Nyata Produk & Pengiriman:
+                    FOTO ASLI PENGIRIMAN
                   </div>
                   <div className="grid grid-cols-3 gap-2.5">
                     <div className="rounded-2xl overflow-hidden border-2 border-emerald-400 aspect-square bg-slate-100 shadow-sm">

@@ -504,10 +504,10 @@ export const LiveActivityFeed: React.FC = () => {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
-    // Initial delay before first toast popup
+    // Jeda 10 detik setelah laman website dibuka sebelum notifikasi pembelian pertama muncul
     const initialTimer = setTimeout(() => {
       setIsVisible(true);
-    }, 2000);
+    }, 10000);
 
     return () => clearTimeout(initialTimer);
   }, []);
@@ -515,17 +515,17 @@ export const LiveActivityFeed: React.FC = () => {
   useEffect(() => {
     if (isDismissed) return;
 
-    // Show for 5 seconds, hide for 3 seconds, then show next
+    // Show for 5.5 seconds, hide for 10 seconds interval, then show next
     if (isVisible) {
       const hideTimer = setTimeout(() => {
         setIsVisible(false);
-      }, 5000);
+      }, 5500);
       return () => clearTimeout(hideTimer);
     } else {
       const showTimer = setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % ACTIVITIES.length);
         setIsVisible(true);
-      }, 3500);
+      }, 10000); // Jeda durasi 10 detik per notifikasi
       return () => clearTimeout(showTimer);
     }
   }, [isVisible, isDismissed]);
@@ -565,19 +565,19 @@ export const LiveActivityFeed: React.FC = () => {
   return (
     <aside
       aria-label="Notifikasi Pembelian & Member Baru"
-      className={`fixed bottom-4 sm:bottom-6 left-3 sm:left-6 z-40 max-w-[340px] sm:max-w-[380px] w-[90vw] transition-all duration-500 transform ${
-        isVisible ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-6 opacity-0 scale-95 pointer-events-none'
+      className={`fixed bottom-22 sm:bottom-6 left-3 sm:left-6 z-50 max-w-[340px] sm:max-w-[380px] w-[calc(100vw-24px)] sm:w-auto transition-all duration-500 transform will-change-transform ${
+        isVisible ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto' : 'translate-y-4 opacity-0 scale-95 pointer-events-none'
       }`}
     >
-      <div className="relative bg-white/98 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-2xl border-2 border-emerald-400 hover:border-emerald-600 transition-all select-none">
+      <div className="relative bg-white/98 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 shadow-[0_12px_30px_rgba(0,0,0,0.22)] border-2 border-emerald-500 hover:border-emerald-600 transition-all select-none">
         {/* Dismiss Button */}
         <button
           onClick={() => setIsDismissed(true)}
-          className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-slate-800 text-white flex items-center justify-center hover:bg-slate-950 transition shadow cursor-pointer"
+          className="absolute -top-2.5 -right-2.5 w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-black transition shadow-md cursor-pointer border border-white"
           title="Tutup Notifikasi"
           aria-label="Tutup Notifikasi"
         >
-          <X className="w-3 h-3" />
+          <X className="w-3.5 h-3.5" />
         </button>
 
         <div className="flex items-center gap-3">

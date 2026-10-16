@@ -1,36 +1,38 @@
 import React from 'react';
-import { SiteSettings } from '../../types';
+import { SiteSettings, SymptomCategory } from '../../types';
 import { 
-  SYMPTOM_DATA, 
-  SOFTGELS_SPILL_IMAGE,
-  PRODUCT_REAL_IMAGE,
-  GOLDEN_SOFTGELS_IMAGE,
-  HAPPY_SENIORS_IMAGE
+  SYMPTOM_DATA
 } from '../../data/initialData';
 import { 
   Sparkles,
   CheckCircle,
-  Maximize2,
   ShoppingBag,
-  Award,
-  ShieldCheck,
   Heart,
   Activity,
   Flame,
-  Zap
+  Zap,
+  Stethoscope,
+  RefreshCw,
+  AlertTriangle,
+  Quote,
+  Pill
 } from 'lucide-react';
 
 interface DynamicSymptomSectionProps {
+  currentSymptom: SymptomCategory;
   onOpenFlyerModal: (title: string, category: string) => void;
   onScrollToProducts: () => void;
+  onReopenIntake: () => void;
   settings: SiteSettings;
 }
 
 export const DynamicSymptomSection: React.FC<DynamicSymptomSectionProps> = ({
+  currentSymptom,
   onOpenFlyerModal,
   onScrollToProducts,
+  onReopenIntake
 }) => {
-  const symptom = SYMPTOM_DATA['semua'];
+  const symptom = SYMPTOM_DATA[currentSymptom] || SYMPTOM_DATA['semua'];
 
   const clinicalBenefits = [
     {
@@ -60,139 +62,135 @@ export const DynamicSymptomSection: React.FC<DynamicSymptomSectionProps> = ({
   ];
 
   return (
-    <section id="keluhan" className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200">
+    <section id="keluhan" className="py-12 sm:py-16 bg-slate-50 border-b border-slate-200 scroll-mt-16">
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-        {/* Section Header with Large Clear Fonts */}
-        <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-950 font-black text-sm sm:text-base px-4 py-2 rounded-full uppercase tracking-wider mb-3 border border-emerald-300">
-            <Award className="w-5 h-5 text-emerald-700" />
-            <span>KHASIAT & MANFAAT KLINIS RESMI</span>
+        {/* Tailored Complaint Indicator & Switcher Banner */}
+        <div className="bg-emerald-900 text-white rounded-3xl p-4 sm:p-5 shadow-lg border-2 border-emerald-400 mb-8 sm:mb-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5 text-center sm:text-left">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-700/80 border border-emerald-400 text-emerald-200 flex items-center justify-center flex-shrink-0 shadow-sm">
+              <Stethoscope className="w-6 h-6 text-emerald-300" />
+            </div>
+            <div>
+              <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-emerald-300 block">
+                PANDUAN BERDASARKAN KELUHAN SAKIT ANDA
+              </span>
+              <div className="text-lg sm:text-xl font-black text-white flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+                <span>Jenis Penyakit Yang Bisa Di Atasi</span>
+                <span className="text-[11px] sm:text-xs font-bold bg-emerald-800 text-emerald-200 px-2.5 py-0.5 rounded-full border border-emerald-600">
+                  Oleh Kapsul HI-OMEGA
+                </span>
+              </div>
+            </div>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 leading-tight">
-            Nutrisi Komprehensif Seluruh Tubuh
-          </h2>
-          <p className="text-slate-700 text-lg sm:text-xl font-bold mt-3 leading-relaxed">
-            Satu formula kapsul nabati Sacha Inchi + VCO bekerja menyeluruh membantu menstabilkan kolesterol, sendi asam urat, tensi darah, dan kesehatan jantung tanpa efek samping:
-          </p>
+
+          <button
+            onClick={onReopenIntake}
+            className="flex-shrink-0 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition cursor-pointer"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>Pilih Solusi</span>
+          </button>
         </div>
 
-        {/* Dynamic Content Spotlight Panel - Image Rich & Concise */}
+        {/* Dynamic Content Spotlight Panel - Tailored for the Complaint */}
         <div className="bg-white rounded-3xl p-6 sm:p-10 border-4 border-emerald-400 shadow-xl">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left: 4 Key Clinical Benefits */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {clinicalBenefits.map((item, idx) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={idx}
-                      className={`p-4 sm:p-5 rounded-2xl border-2 ${item.color} flex flex-col justify-between shadow-sm`}
-                    >
-                      <div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <Icon className="w-6 h-6 flex-shrink-0" />
-                          <h4 className="text-base sm:text-lg font-black text-slate-900 leading-snug">
-                            {item.title}
-                          </h4>
-                        </div>
-                        <p className="text-xs sm:text-sm font-semibold text-slate-700 leading-relaxed">
-                          {item.desc}
+          {/* Medical Warning Box for this specific condition */}
+          <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-amber-50 border-2 border-amber-300 flex items-start gap-3.5">
+            <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="text-amber-950 font-black text-sm sm:text-base block leading-snug">
+                Jangan Tunggu Sakit Semakin Parah Merawat Dan Mencegah Sejak Dini Jauh Lebih Murah Daripada Biaya Rumah Sakit
+              </strong>
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-6">
+              {/* Symptoms Checklist */}
+              {symptom.symptomsList && symptom.symptomsList.length > 0 && (
+                <div className="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                  <h4 className="text-base sm:text-lg font-black text-slate-900 mb-3 flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-emerald-700" />
+                    <span>Gejala Awal Yang Patut Di Waspadai</span>
+                  </h4>
+                  <div className="space-y-2">
+                    {symptom.symptomsList.map((symp, sIdx) => (
+                      <div key={sIdx} className="flex items-start gap-2.5 text-sm sm:text-base font-semibold text-slate-800">
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <span>{symp}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Mechanism of Action Steps */}
+              {symptom.mechanismSteps && symptom.mechanismSteps.length > 0 && (
+                <div>
+                  <h4 className="text-lg sm:text-xl font-black text-slate-900 mb-3 flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-emerald-600" />
+                    <span>{symptom.mechanismTitle || 'Bagaimana HI-OMEGA Bekerja?'}</span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {symptom.mechanismSteps.map((step, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 rounded-2xl bg-emerald-50/60 border-2 border-emerald-200 shadow-sm"
+                      >
+                        <h5 className="text-base font-black text-slate-900 mb-1 leading-snug">
+                          {step.title}
+                        </h5>
+                        <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">
+                          {step.desc}
                         </p>
                       </div>
-                    </div>
-                  );
-                })}
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Patient Experience Quote */}
+              {/* Patient Experience Quote */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-teal-50 border-2 border-teal-300 relative">
+                <Quote className="w-6 h-6 text-teal-600 mb-1 opacity-70" />
+                <p className="text-sm sm:text-base font-bold text-teal-950 italic">
+                  "Tubuh Manusia Tidak Dapat Memproduksi OMEGA-3, Sehingga Harus Di Dapatkan Dari Makanan / Suplemen Seperti Hi-OMEGA"
+                </p>
               </div>
 
-              {/* Quality Checklist */}
-              <div className="bg-slate-50 p-4 sm:p-5 rounded-2xl border-2 border-slate-200">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm sm:text-base font-bold text-slate-800">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    <span>Halal MUI & Izin Edar BPOM RI</span>
+              {/* Dosage Guideline Card */}
+              <div className="bg-emerald-900 text-white p-5 rounded-2xl border-2 border-emerald-500 shadow-md">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <Pill className="w-6 h-6 text-amber-300" />
+                  <h4 className="text-base sm:text-lg font-black text-white">
+                    Aturan Pakai
+                  </h4>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm pt-1">
+                  <div className="bg-emerald-950/60 p-3 rounded-xl border border-emerald-700/60">
+                    <strong className="text-amber-300 font-black block mb-0.5">Masa Penyembuhan:</strong>
+                    <span className="text-emerald-100 font-medium">2 Kapsul Pagi & 2 Kapsul Malam (Sesudah Makan)</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    <span>Ekstrak Nabati Murni Bebas Logam Berat</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    <span>Aman Dikonsumsi Usia 40 Tahun ke Atas</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-                    <span>Kemasan Higienis Segel Hologram</span>
+                  <div className="bg-emerald-950/60 p-3 rounded-xl border border-emerald-700/60">
+                    <strong className="text-emerald-300 font-black block mb-0.5">Merawat Kesehatan:</strong>
+                    <span className="text-emerald-100 font-medium">1 Kapsul Pagi & 1 Kapsul Malam (Sesudah Makan)</span>
                   </div>
                 </div>
               </div>
 
               {/* Action Button: Direct to Web Order Form */}
-              <div className="pt-2">
+              <div className="pt-2 flex justify-center">
                 <button
                   onClick={onScrollToProducts}
-                  className="w-full bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-black py-4 sm:py-5 px-6 rounded-2xl text-xl sm:text-2xl flex items-center justify-center gap-3.5 shadow-xl transition border-2 border-emerald-500 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white font-black py-3 sm:py-3.5 px-6 sm:px-8 rounded-xl sm:rounded-2xl text-base sm:text-lg shadow-lg hover:shadow-xl transition border-2 border-emerald-400 cursor-pointer"
+                  aria-label="BELI HI-OMEGA"
                 >
-                  <ShoppingBag className="w-7 h-7 text-emerald-200 flex-shrink-0" />
-                  <span>Pesan Paket HI-OMEGA (Form Pemesanan)</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Right: Infographic Flyer Graphic Card with Real Photos */}
-            <div className="lg:col-span-5 flex flex-col items-center">
-              <div className="w-full bg-slate-900 text-white rounded-3xl p-5 shadow-2xl border-4 border-emerald-500 relative group overflow-hidden">
-                {/* Flyer Header Bar */}
-                <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-3 rounded-2xl text-center mb-4">
-                  <span className="text-xs font-black uppercase tracking-widest text-emerald-100">
-                    INFOGRAFIS KESEHATAN RESMI
-                  </span>
-                  <div className="text-2xl font-black italic tracking-wide text-white">
-                    HI-OMEGA SACHA INCHI
-                  </div>
-                </div>
-
-                {/* Infographic Visual Card Preview */}
-                <div className="relative rounded-2xl overflow-hidden bg-slate-800 border border-slate-700 p-2">
-                  <img
-                    src={SOFTGELS_SPILL_IMAGE}
-                    alt="HI-OMEGA Sacha Inchi + VCO"
-                    className="w-full h-72 sm:h-80 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300 opacity-90"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent flex flex-col justify-end p-5">
-                    <span className="text-xs font-black uppercase tracking-wider text-emerald-400">
-                      Panduan Klinis Alami
-                    </span>
-                    <h5 className="text-xl sm:text-2xl font-black text-white mt-1">
-                      Kombinasi Omega 3-6-9 & Minyak Kelapa Murni (VCO)
-                    </h5>
-                    <p className="text-sm font-bold text-slate-200 mt-1 line-clamp-2">
-                      Membantu memelihara kesehatan tubuh, melancarkan peredaran darah, serta menjaga elastisitas sendi & pembuluh darah.
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => onOpenFlyerModal('Khasiat Lengkap HI-OMEGA', 'semua')}
-                    className="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white p-3 rounded-full backdrop-blur-sm transition border border-white/20 cursor-pointer"
-                    title="Perbesar Flyer (Mode Baca Lansia)"
-                    aria-label="Perbesar Flyer"
-                  >
-                    <Maximize2 className="w-6 h-6 text-emerald-300" />
-                  </button>
-                </div>
-
-                <button
-                  onClick={() => onOpenFlyerModal('Khasiat Lengkap HI-OMEGA', 'semua')}
-                  className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 px-4 rounded-2xl font-black text-base sm:text-lg flex items-center justify-center gap-2.5 shadow-lg transition cursor-pointer"
-                >
-                  <Maximize2 className="w-5 h-5" />
-                  <span>Buka Flyer Lengkap (Ukuran Besar)</span>
+                  <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-200" />
+                  <span>BELI HI-OMEGA</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 };

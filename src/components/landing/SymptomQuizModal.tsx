@@ -124,6 +124,42 @@ export const SymptomQuizModal: React.FC<SymptomQuizModalProps> = ({
       borderColor: 'border-pink-200'
     },
     {
+      id: 'pengentalan_darah',
+      title: 'Pengentalan Darah',
+      tagline: 'Sering kesemutan, darah kental, telapak dingin & pusing berputar',
+      badge: 'CEGAH TROMBOSIS',
+      icon: <Droplets className="w-8 h-8 text-red-600" />,
+      bgGradient: 'hover:bg-red-50/80 bg-white',
+      borderColor: 'border-red-200'
+    },
+    {
+      id: 'otak_anak',
+      title: 'Kecerdasan Otak Anak',
+      tagline: 'DHA nabati optimalkan IQ, daya tangkap, fokus & memori belajar',
+      badge: 'DHA & EPA MURNI',
+      icon: <Brain className="w-8 h-8 text-amber-600" />,
+      bgGradient: 'hover:bg-amber-50/80 bg-white',
+      borderColor: 'border-amber-200'
+    },
+    {
+      id: 'anxiety_depresi',
+      title: 'Depresi & Anxiety',
+      tagline: 'Cemas mendadak, jantung berdebar, insomnia & overthinking',
+      badge: 'PENENANG SARAF',
+      icon: <Heart className="w-8 h-8 text-violet-600" />,
+      bgGradient: 'hover:bg-violet-50/80 bg-white',
+      borderColor: 'border-violet-200'
+    },
+    {
+      id: 'autoimun',
+      title: 'Auto Imun',
+      tagline: 'Lelah kronis berkepanjangan, radang sendi/kulit, modulasi imun',
+      badge: 'MODULASI IMUN',
+      icon: <ShieldAlert className="w-8 h-8 text-teal-600" />,
+      bgGradient: 'hover:bg-teal-50/80 bg-white',
+      borderColor: 'border-teal-200'
+    },
+    {
       id: 'semua',
       title: 'Semua Khasiat Superfood',
       tagline: 'Ingin stamina kuat, imunitas harian & jaga kesehatan menyeluruh',

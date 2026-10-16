@@ -10,14 +10,14 @@ export const TestimonialSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 bg-emerald-800/80 border border-emerald-600 text-emerald-200 px-4 py-1.5 rounded-full text-xs sm:text-sm font-black uppercase tracking-wider mb-3">
-            <HeartHandshake className="w-4 h-4 text-emerald-400" />
-            Bukti Nyata Konsumen Kami
+            <Star className="w-4 h-4 text-amber-300 fill-amber-300" />
+            <span>ULASAN BINTANG LIMA</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
             Kesaksian Nyata Pengguna HI-OMEGA
           </h2>
           <p className="mt-3 text-lg sm:text-xl text-emerald-100 font-medium">
-            Kisah nyata pemulihan kesehatan kolesterol, sendi, darah tinggi, dan stamina tubuh dari berbagai kota di Indonesia.
+            Beberapa Kesaksian Pemulihan Kesehatan Penderita Jantung, Asam Urat, Darah Tinggi, Pikun, Kolesterol, Anxiety, Masalah Persendian, Pengentalan Darah Dan Berbagai Keluhan Yang Lain.
           </p>
         </div>
 
